@@ -1,0 +1,11 @@
+# 上位ディレクトリから .editorconfig 設定を継承する場合は、以下の行を削除します
+root = true
+
+# C# ファイル
+[*.{cs}]
+
+# 改行設定
+end_of_line = lf
+
+# UTF-8
+charset = utf-8-bom
