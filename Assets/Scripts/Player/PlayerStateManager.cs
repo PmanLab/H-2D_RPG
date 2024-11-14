@@ -120,7 +120,7 @@ public class PlayerStateManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// プレイヤー状態取得メソッド
     /// </summary>
     /// <returns></returns>
     public PlayerState GetPlayerState()
