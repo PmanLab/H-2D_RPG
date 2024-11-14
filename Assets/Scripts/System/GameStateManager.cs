@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
@@ -6,19 +6,21 @@ using System.Runtime.CompilerServices;
 
 public class GameStateManager : MonoBehaviour
 {
-    public static GameStateManager instance_;
+    //=== ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ ===
+    public static GameStateManager instance;
 
+    //=== å¤‰æ•°å®£è¨€ ===
     private ReactiveProperty<bool> isInPause = new ReactiveProperty<bool>(false);
 
     /// <summary>
-    /// ‘æˆê‰Šú‰»ƒƒ\ƒbƒh
+    /// ç¬¬ä¸€åˆæœŸåŒ–ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
     private void Awake()
     {
-        //--- ƒVƒ“ƒOƒ‹ƒgƒ“ ---
-        if(instance_ == null)
+        //--- ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ ---
+        if(instance == null)
         {
-            instance_ = this;
+            instance = this;
             DontDestroyOnLoad(gameObject);
         }
         else
@@ -28,7 +30,7 @@ public class GameStateManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ‘æ“ñ‰Šú‰»ƒƒ\ƒbƒh
+    /// ç¬¬äºŒåˆæœŸåŒ–ãƒ¡ã‚½ãƒƒãƒ‰
     /// </summary>
     private void Start()
     {
@@ -36,26 +38,26 @@ public class GameStateManager : MonoBehaviour
         
         {
             if(isPaused)
-            {// ƒ|[ƒY‚Ìˆ—
+            {// ãƒãƒ¼ã‚ºæ™‚ã®å‡¦ç†
 
             }
             else
-            {// ”ñƒ|[ƒY‚Ìˆ—
+            {// éãƒãƒ¼ã‚ºæ™‚ã®å‡¦ç†
                 
             }
         });
     }
 
     /// <summary>
-    /// OnDestroyƒƒ\ƒbƒh 
+    /// OnDestroyãƒ¡ã‚½ãƒƒãƒ‰ 
     /// </summary>
     private void OnDestroy()
     {
-        isInPause.Dispose(); // ReactiveProperty‚ğ‰ğ•ú
+        isInPause.Dispose(); // ReactivePropertyã‚’è§£æ”¾
     }
 
     /// <summary>
-    /// ƒ|[ƒYŠJn
+    /// ãƒãƒ¼ã‚ºé–‹å§‹æ™‚
     /// </summary>
     public void StartPause()
     {
@@ -63,7 +65,7 @@ public class GameStateManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ƒ|[ƒYI—¹
+    /// ãƒãƒ¼ã‚ºçµ‚äº†æ™‚
     /// </summary>
     public void EndPaused()
     {
