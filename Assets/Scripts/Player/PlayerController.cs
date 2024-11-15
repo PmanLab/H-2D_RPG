@@ -5,8 +5,8 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     //=== 格納用インスタンス ===
-    private PlayerInput playerInput;
-    private PlayerMove playerMove;
+    [SerializeField, Header("PlayerInputをアタッチ")]private PlayerInput playerInput;
+    [SerializeField, Header("PlayerMoveをアタッチ")] private PlayerMove playerMove;
 
     // PlayerInputのアクションマッピング
     private InputAction moveForwardAction;
@@ -24,9 +24,6 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void Start()
     {
-        // PlayerInputの設定
-        playerInput = GetComponent<PlayerInput>();
-
         // Actionの取得
         var playerControls = playerInput.actions;
         moveForwardAction = playerControls["MoveForward"];
@@ -34,8 +31,6 @@ public class PlayerController : MonoBehaviour
         moveLeftAction = playerControls["MoveLeft"];
         moveRightAction = playerControls["MoveRight"];
         attackAction = playerControls["Attack"];
-
-        playerMove = GetComponent<PlayerMove>();
 
         // 入力をReactivePropertyにバインド
         moveForwardAction.performed += ctx => UpdateMoveInput();

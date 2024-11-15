@@ -51,5 +51,6 @@ public class ButtonManager : MonoBehaviour
     /// </summary>
     public void UnPause()
     {
+        GameStateManager.instance.EndPaused();
     }
 }

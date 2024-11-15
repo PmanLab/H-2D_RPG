@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using System.Runtime.CompilerServices;
+using System;
 
 public class GameStateManager : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class GameStateManager : MonoBehaviour
 
     //=== 変数宣言 ===
     private ReactiveProperty<bool> isInPause = new ReactiveProperty<bool>(false);
+    private IDisposable pausedSubscription;
 
     /// <summary>
     /// 第一初期化メソッド
@@ -34,18 +36,31 @@ public class GameStateManager : MonoBehaviour
     /// </summary>
     private void Start()
     {
-        isInPause.Subscribe(isPaused =>
-        
-        {
-            if(isPaused)
-            {// ポーズ時の処理
+        // ESCキーが押されたときにポーズ状態をトグル（Dead状態以外）
+        pausedSubscription = Observable.EveryUpdate()
+            .Where(_ => Input.GetKeyDown(KeyCode.Escape))
+            .Where(_ => PlayerStateManager.instance.GetPlayerState() != PlayerStateManager.PlayerState.Dead) // Dead以外のときのみ処理
+            .Subscribe(_ =>
+            {
+                isInPause.Value = !isInPause.Value; // ポーズ状態をトグル
+            })
+            .AddTo(this);
 
+        // ポーズ時の処理
+        isInPause.Subscribe(isPaused =>
+        {
+            if (isPaused)
+            {// ポーズ時の処理
+                Debug.Log("ポーズ状態：" + isInPause.Value);
+                Time.timeScale = 0.0f;
             }
             else
             {// 非ポーズ時の処理
-                
+                Debug.Log("ポーズ状態：" + isInPause.Value);
+                Time.timeScale = 1.0f;
             }
-        });
+        })
+        .AddTo(this);
     }
 
     /// <summary>
@@ -59,7 +74,7 @@ public class GameStateManager : MonoBehaviour
     /// <summary>
     /// ポーズ開始時
     /// </summary>
-    public void StartPause()
+    public void StartPaused()
     {
         isInPause.Value = true;
     }

@@ -21,7 +21,7 @@ public class PlayerStateManager : MonoBehaviour
 
     //=== 変数宣言 ===
     private ReactiveProperty<bool> bIsInConversation = new ReactiveProperty<bool>(false);   // 会話フラグ
-    private ReactiveProperty<PlayerState> eCurrentPlayerState = new ReactiveProperty<PlayerState>(PlayerState.Idle); // プレイヤー状態
+    public ReactiveProperty<PlayerState> eCurrentPlayerState = new ReactiveProperty<PlayerState>(PlayerState.Idle); // プレイヤー状態
 
     /// <summary>
     /// 第一初期化処理
