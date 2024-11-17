@@ -18,6 +18,11 @@ public class PlayerController : MonoBehaviour
     //=== 変数宣言 ===
     private ReactiveProperty<Vector3> moveInput = new ReactiveProperty<Vector3>();  // Vector2からVector3に変更
     private ReactiveProperty<bool> isAttacking = new ReactiveProperty<bool>(false);
+    private bool isConversationActive = false;  // 会話中かどうかのフラグ
+
+    //=== プロパティ ===
+    public bool IsMoving => moveInput.Value != Vector3.zero; // 移動中かどうかを判定するプロパティ
+
 
     /// <summary>
     /// 第一初期化メソッド
@@ -58,6 +63,11 @@ public class PlayerController : MonoBehaviour
 
     private void UpdateMoveInput()
     {
+        // 会話中は移動しないようにする
+        if (isConversationActive) return;
+
+
+
         // 各キー入力に基づいて移動方向を決定
         float x = 0f;
         float z = 0f;
@@ -85,6 +95,19 @@ public class PlayerController : MonoBehaviour
     {
         // 移動の処理
         playerMove.Move(moveInput.Value);
+    }
+
+    // 会話開始時に移動を停止
+    public void StopMovement()
+    {
+        isConversationActive = true;
+        moveInput.Value = Vector3.zero;  // 移動を強制的に停止
+    }
+
+    // 会話終了時に移動を再開
+    public void ResumeMovement()
+    {
+        isConversationActive = false;
     }
 
     /// <summary>
