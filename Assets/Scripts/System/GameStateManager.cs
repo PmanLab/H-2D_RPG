@@ -7,6 +7,9 @@ using System;
 
 public class GameStateManager : MonoBehaviour
 {
+    //=== シリアライズ ===
+    [SerializeField, Header("ポーズUI")] private GameObject pauseUI;
+
     //=== インスタンス ===
     public static GameStateManager instance;
 
@@ -52,11 +55,13 @@ public class GameStateManager : MonoBehaviour
             if (isPaused)
             {// ポーズ時の処理
                 Debug.Log("ポーズ状態：" + isInPause.Value);
+                pauseUI.SetActive(true);
                 Time.timeScale = 0.0f;
             }
             else
             {// 非ポーズ時の処理
                 Debug.Log("ポーズ状態：" + isInPause.Value);
+                pauseUI.SetActive(false);
                 Time.timeScale = 1.0f;
             }
         })
