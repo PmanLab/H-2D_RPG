@@ -1,10 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UniRx;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
+/// <summary>
+/// プレイヤーインタラクト(InteractBase継承)
+/// プレイヤーが行うインタラクト操作に関する事をまとめてある
+/// </summary>
 public class PlayerInteract : InteractBase
 {
     //=== シリアライズ ===

@@ -1,6 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+
+/// <summary>
+/// アイテムインタラクト(InteractBase継承)
+/// 主にアイテムに関するインタラクト処理をまとめてある
+/// </summary>
 public class ItemInteract : InteractBase
 {
     //=== シリアライズ ===

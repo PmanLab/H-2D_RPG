@@ -1,8 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UniRx;
+﻿using UnityEngine;
 
+/// <summary>
+/// インタラクトベース(抽象クラス)
+/// インタラクトにおける処理をまとめてある
+/// </summary>
 public abstract class InteractBase : MonoBehaviour
 {
     //=== シリアライズ ===

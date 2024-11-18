@@ -1,29 +1,22 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
-using System;
 
-public class NPCInteract : InteractBase
+/// <summary>
+/// NPCインタラクト_ショップ(InteractBase継承)
+/// ショップ(売買)NPCの処理をまとめてある
+/// </summary>
+public class NPCInteract_ItemShop : InteractBase
 {
     //=== シリアライズ ===
-    [SerializeField, Header("NPCの種類")] private NPCType npcType;
     [SerializeField, Header("最初のセリフ")] private string initialDialogue;
     [SerializeField, Header("通常会話リスト")] private List<string> conversationList;
     [SerializeField, Header("会話テキストを表示するUIのText")] private Text dialogueText;  // Textコンポーネントを参照   [SerializeField, Header("会話ウィンドウのImage")] private Image dialogueWindow;  // 会話ウィンドウのImageコンポーネント
     [SerializeField, Header("会話ウィンドウのImage")] private GameObject dialogueWindow;  // 会話ウィンドウのImageコンポーネント
     [SerializeField, Header("インタラクトUIを制御するPlayerInteract")] private PlayerInteract playerInteract;  // PlayerInteractを参照
     [SerializeField, Header("PlayerControllerをアタッチ")] private PlayerController playerController;
-
-    //=== 列挙型定義 ===
-    public enum NPCType
-    {
-        ConvertionOnly, // 会話のみ
-        ItemExchange,   // アイテム交換
-        ItemShop,       // アイテム売買
-        InnKeeper       // 宿屋
-    }
 
     //=== 変数宣言 ===
     private int currentDialogueIndex = 0;  // 現在の会話のインデックス
@@ -32,7 +25,6 @@ public class NPCInteract : InteractBase
 
     //=== プロパティ ===
     public string InititalDialogue => initialDialogue;
-    public NPCType Type => npcType;
 
     /// <summary>
     /// インタラクトメソッド
@@ -110,4 +102,5 @@ public class NPCInteract : InteractBase
         dialogueWindow.SetActive(isVisible);  // ウィンドウの表示/非表示を設定
         dialogueText.gameObject.SetActive(isVisible);  // テキストの表示/非表示を設定
     }
+
 }
