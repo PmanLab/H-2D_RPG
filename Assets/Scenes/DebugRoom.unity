@@ -156,6 +156,7 @@ Transform:
   - {fileID: 351147884}
   - {fileID: 491959124}
   - {fileID: 2059655201}
+  - {fileID: 1292084351}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &79364573
@@ -1427,6 +1428,50 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetFPS: 60
+--- !u!1 &1292084350
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1292084351}
+  - component: {fileID: 1292084352}
+  m_Layer: 0
+  m_Name: MoneyManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1292084351
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1292084350}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 69640097}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1292084352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1292084350}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38b3a47a083723b4ba8be7268a42c777, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1333353268
 GameObject:
   m_ObjectHideFlags: 0
@@ -2115,6 +2160,7 @@ GameObject:
   - component: {fileID: 1915051088}
   - component: {fileID: 1915051089}
   - component: {fileID: 1915051091}
+  - component: {fileID: 1915051092}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -2293,6 +2339,20 @@ MonoBehaviour:
   playerInput: {fileID: 1915051090}
   dialogueWindow: {fileID: 1625343584}
   dialogueText: {fileID: 1966791554}
+--- !u!114 &1915051092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1915051084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20f02ad5ee9ca35499d41feb9af79f34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHP: 100
+  attackPower: 10
 --- !u!1 &1919146952
 GameObject:
   m_ObjectHideFlags: 0
@@ -2723,6 +2783,8 @@ MonoBehaviour:
   - "\u4F55\u304B\u304A\u8CB7\u3044\u7269\u3055\u308C\u307E\u3059\u304B\uFF1F"
   dialogueText: {fileID: 1966791554}
   dialogueWindow: {fileID: 1625343584}
+  itemPrice: 0
+  purchaseMessage: 
   playerInteract: {fileID: 1915051091}
   playerController: {fileID: 1915051089}
 --- !u!1 &1966791552

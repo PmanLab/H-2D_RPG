@@ -20,7 +20,7 @@ public abstract class StatusManagerBase : MonoBehaviour
     public IReadOnlyReactiveProperty<int> CurrentHP => currentHP;
 
     /// <summary>
-    /// 第一初期化処理
+    /// 第一初期化処理メソッド
     /// </summary>
     protected virtual void Awake()
     {
@@ -45,6 +45,11 @@ public abstract class StatusManagerBase : MonoBehaviour
     public void Heal(int amount)
     {
         currentHP.Value = Mathf.Min(currentHP.Value + amount, maxHP);
+    }
+
+    public void MaxHeal()
+    {
+        currentHP.Value = maxHP;
     }
 
     /// <summary>

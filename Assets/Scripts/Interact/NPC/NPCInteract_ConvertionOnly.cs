@@ -13,8 +13,10 @@ public class NPCInteract_ConvertionOnly : InteractBase
     //=== シリアライズ ===
     [SerializeField, Header("最初のセリフ")] private string initialDialogue;
     [SerializeField, Header("通常会話リスト")] private List<string> conversationList;
+    
     [SerializeField, Header("会話テキストを表示するUIのText")] private Text dialogueText;  // Textコンポーネントを参照   [SerializeField, Header("会話ウィンドウのImage")] private Image dialogueWindow;  // 会話ウィンドウのImageコンポーネント
     [SerializeField, Header("会話ウィンドウのImage")] private GameObject dialogueWindow;  // 会話ウィンドウのImageコンポーネント
+    
     [SerializeField, Header("インタラクトUIを制御するPlayerInteract")] private PlayerInteract playerInteract;  // PlayerInteractを参照
     [SerializeField, Header("PlayerControllerをアタッチ")] private PlayerController playerController;
 
@@ -40,6 +42,7 @@ public class NPCInteract_ConvertionOnly : InteractBase
     /// </summary>
     private void StartConversation()
     {
+        SetNpcName();               // NPCの名前をセット
         currentDialogueIndex = 0;   // セリフインデックスをリセット
         isConversationActive = true;
 
@@ -77,7 +80,7 @@ public class NPCInteract_ConvertionOnly : InteractBase
     private void DisplayDialogue(string dialogue)
     {
         ShowDialogueWindow(true);       // 会話ウィンドウとテキストを表示
-        dialogueText.text = dialogue;   // テキストをセット
+        dialogueText.text = dialogue;   // テキストをセット(本文)
     }
 
     /// <summary>

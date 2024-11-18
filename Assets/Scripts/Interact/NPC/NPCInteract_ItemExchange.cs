@@ -40,6 +40,7 @@ public class NPCInteract_ItemExchange : InteractBase
     /// </summary>
     private void StartConversation()
     {
+        SetNpcName();               // NPCの名前をセット
         currentDialogueIndex = 0;   // セリフインデックスをリセット
         isConversationActive = true;
 

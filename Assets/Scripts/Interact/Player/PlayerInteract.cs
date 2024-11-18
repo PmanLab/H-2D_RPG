@@ -25,9 +25,7 @@ public class PlayerInteract : InteractBase
     /// <summary>
     /// インタラクションメソッド
     /// </summary>
-    public override void Interact()
-    {
-    }
+    public override void Interact(){}
 
     /// <summary>
     /// 第一初期化処理

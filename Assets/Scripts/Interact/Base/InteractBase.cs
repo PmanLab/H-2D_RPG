@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// インタラクトベース(抽象クラス)
@@ -9,6 +10,8 @@ public abstract class InteractBase : MonoBehaviour
     //=== シリアライズ ===
     [SerializeField, Header("オブジェクト名")] private string interactableName;
     [SerializeField, Header("表示するインタラクト可能UI")] private GameObject interactUI;  // インタラクト可能UIを表示するためのGameObject
+    [SerializeField, Header("オブジェクト名を表示するText")] private Text interactableNameText;
+    [SerializeField, Header("名前表示用のUIテキスト")] private Text nameDisplayText; // オブジェクト名を表示するTextコンポーネント
 
     //=== プロパティ ===
     public string InteractableName => interactableName;
@@ -18,28 +21,19 @@ public abstract class InteractBase : MonoBehaviour
     /// </summary>
     public abstract void Interact();
 
-
     /// <summary>
-    /// インタラクト可能時のUI表示等の処理
-    /// </summary>
-    public virtual void OnInteractableHighlight()
-    {
-        ShowInteractUI(true);
-    }
-
-    /// <summary>
-    /// インタラクト不可能時のUI非表示等の処理
-    /// </summary>
-    public virtual void OnInteractableUnHighlighted()
-    {
-        ShowInteractUI(false);
-    }
-
-    /// <summary>
-    /// UIの表示・非表示を切り替える
+    /// UIの表示・非表示を切り替えるメソッド
     /// </summary>
     public virtual void ShowInteractUI(bool isVisible)
     {
         interactUI.SetActive(isVisible);
+    }
+
+    /// <summary>
+    /// テキストにNPC名をセットするメソッド
+    /// </summary>
+    public virtual void SetNpcName()
+    {
+        nameDisplayText.text = interactableName;
     }
 }
