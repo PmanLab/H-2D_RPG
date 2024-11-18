@@ -2,7 +2,7 @@
 
 /// <summary>
 /// インタラクトベース(抽象クラス)
-/// インタラクトにおける処理をまとめてある
+/// インタラクトにおける共通処理をまとめてある
 /// </summary>
 public abstract class InteractBase : MonoBehaviour
 {
