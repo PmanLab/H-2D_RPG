@@ -8,14 +8,14 @@ public class GameStateManager : MonoBehaviour
     [SerializeField, Header("ポーズUI")] private GameObject pauseUI;
 
     //=== インスタンス ===
-    public static GameStateManager instance;
+    public static GameStateManager instance;    // インスタンス用
 
     //=== 変数宣言 ===
-    private ReactiveProperty<bool> isInPause = new ReactiveProperty<bool>(false);
+    private ReactiveProperty<bool> isInPause = new ReactiveProperty<bool>(false);   // ポーズ用フラグ
     private IDisposable pausedSubscription;
 
     /// <summary>
-    /// 第一初期化メソッド
+    /// ・シングルトン生成処理
     /// </summary>
     private void Awake()
     {
@@ -32,7 +32,8 @@ public class GameStateManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 第二初期化メソッド
+    /// ・ESCキー押下自のポーズフラグ監視処理
+    /// ・ポーズになった時の細かい処理(今後はここに追加する)
     /// </summary>
     private void Start()
     {
@@ -66,15 +67,16 @@ public class GameStateManager : MonoBehaviour
     }
 
     /// <summary>
-    /// OnDestroyメソッド 
+    /// ・ReactivePropertyを解放
     /// </summary>
     private void OnDestroy()
     {
-        isInPause.Dispose(); // ReactivePropertyを解放
+        isInPause.Dispose();
     }
 
     /// <summary>
-    /// ポーズ開始時
+    /// ・ポーズフラグをONにする処理
+    /// ※ポーズ開始時
     /// </summary>
     public void StartPaused()
     {
@@ -82,7 +84,8 @@ public class GameStateManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ポーズ終了時
+    /// ・ポーズフラグをOFFにする処理
+    /// ※ポーズ終了時
     /// </summary>
     public void EndPaused()
     {

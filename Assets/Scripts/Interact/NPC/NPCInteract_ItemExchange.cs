@@ -27,7 +27,8 @@ public class NPCInteract_ItemExchange : InteractBase
     public string InititalDialogue => initialDialogue;
 
     /// <summary>
-    /// インタラクトメソッド
+    ///・ 継承したインタラクト処理内で
+    /// 　このNPCが会話した時のメソッドを呼び出す
     /// </summary>
     public override void Interact()
     {
@@ -36,7 +37,9 @@ public class NPCInteract_ItemExchange : InteractBase
     }
 
     /// <summary>
-    /// 会話の開始処理メソッド
+    /// ・NPCの名前やセリフ等の情報を設定し、
+    /// 　それを表示される
+    /// ・リストによる会話自の会話進行処理
     /// </summary>
     private void StartConversation()
     {
@@ -73,8 +76,10 @@ public class NPCInteract_ItemExchange : InteractBase
     }
 
     /// <summary>
-    /// 会話を表示するメソッド
+    /// ・会話を表示するメソッド
+    /// ・会話ウィンドウとテキストを表示
     /// </summary>
+    /// <param name="dialogue">表示するセリフ</param>
     private void DisplayDialogue(string dialogue)
     {
         ShowDialogueWindow(true);       // 会話ウィンドウとテキストを表示
@@ -82,7 +87,7 @@ public class NPCInteract_ItemExchange : InteractBase
     }
 
     /// <summary>
-    /// 会話が終了したらUIを非表示にするメソッド
+    /// ・会話が終了した際にUIを非表示にする
     /// </summary>
     private void EndConversation()
     {
@@ -96,12 +101,13 @@ public class NPCInteract_ItemExchange : InteractBase
     }
 
     /// <summary>
-    /// 会話ウィンドウの表示・非表示を切り替えるメソッド
+    /// ・会話ウィンドウの表示・非表示を切り替える処理
     /// </summary>
+    /// <param name="isVisible">メッセージウィンドウの有効・無効</param>
     private void ShowDialogueWindow(bool isVisible)
     {
         dialogueWindow.SetActive(isVisible);  // ウィンドウの表示/非表示を設定
         dialogueText.gameObject.SetActive(isVisible);  // テキストの表示/非表示を設定
     }
 
-}
+}    

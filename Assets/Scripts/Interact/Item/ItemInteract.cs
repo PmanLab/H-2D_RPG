@@ -11,7 +11,11 @@ public class ItemInteract : InteractBase
     [SerializeField, Header("開けられるかどうか")] private bool isLocked;
     [SerializeField, Header("開いた後のメッセージ")] private string openedMessage;
     [SerializeField, Header("名前表示用のUIテキスト")] private Text nameDisplayText; // オブジェクト名を表示するTextコンポーネント
+    
 
+    /// <summary>
+    /// ・宝箱を開ける時の処理
+    /// </summary>
     public override void Interact()
     {
         if(isLocked)

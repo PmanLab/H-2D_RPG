@@ -18,6 +18,11 @@ public class PlayerStatusManager : StatusManagerBase
     public int CurrentMoney => currentMoney; // 現在の所持金
 
     //=== 初期化処理 ===
+    /// <summary>
+    /// ・親クラスのAwakeを呼び出し(StatusManagerBase)
+    /// └ 最大HPを設定
+    /// ※所持金の表示
+    /// </summary>
     protected override void Awake()
     {
         base.Awake();  // 親クラスのAwakeを呼び出してHPを初期化
@@ -27,7 +32,7 @@ public class PlayerStatusManager : StatusManagerBase
 
     //=== 所持金関連 ===
     /// <summary>
-    /// 所持金を減らすメソッド
+    /// ・所持金から指定した値分だけ減らす
     /// </summary>
     /// <param name="amount">減らす金額</param>
     /// <returns>減らす金額が所持金以上ならtrue、足りない場合はfalse</returns>
@@ -47,7 +52,7 @@ public class PlayerStatusManager : StatusManagerBase
     }
 
     /// <summary>
-    /// 所持金を追加するメソッド
+    /// ・所持金に指定した値分だけ与える
     /// </summary>
     /// <param name="amount">追加する金額</param>
     public void AddMoney(int amount)
@@ -56,18 +61,20 @@ public class PlayerStatusManager : StatusManagerBase
         Debug.Log($"所持金: {currentMoney}円");
     }
 
-    //=== 死亡処理 ===
+    /// <summary>
+    /// ・プレイヤー用の死亡処理
+    /// 今後に期待
+    /// </summary>
     protected override void Die()
     {
         base.Die();
-        // プレイヤー用の死亡処理（例えば、ゲームオーバー画面を表示する等）
         Debug.Log("プレイヤーが死亡しました！");
     }
 
     /// <summary>
-    /// 所持金確認メソッド 
+    /// ・自分のお金と他を比べて結果を返す
     /// </summary>
-    /// <param name="amount"></param>
+    /// <param name="amount">比べる他対象のお金情報</param>
     /// <returns></returns>
     public bool CanAfford(int amount)
     {

@@ -23,27 +23,32 @@ public class PlayerInteract : InteractBase
     private InputAction interactAction;  // "Interact"アクションを保持する変数
 
     /// <summary>
+    /// 
     /// インタラクションメソッド
+    /// 
     /// </summary>
     public override void Interact(){}
 
     /// <summary>
-    /// 第一初期化処理
+    /// 
+    /// 第二初期化処理
+    /// 
     /// PlayerInputからインタラクトアクションを取得し、
-    /// インタラクト処理の監視を開始する。
+    /// インタラクト処理の監視を開始する
+    /// 
     /// </summary>
     private void Start()
     {
-        // InputActionを取得 (PlayerInputから「Interact」アクションを取得)
+        //--- InputActionを取得 (PlayerInputから「Interact」アクションを取得) ---
         interactAction = playerInput.actions["Interact"];
 
-        // インタラクト処理
+        //--- インタラクト処理 ---
         Observable.EveryUpdate()
             .Where(_ => interactAction.triggered && CanInteract())
             .Subscribe(_ => TryInteract())
             .AddTo(this);
 
-        // UIの表示/非表示を分けて処理
+        //--- UIの表示/非表示を分けて処理 ---
         Observable.EveryUpdate()
             .Where(_ => CanInteract())
             .Subscribe(_ => ShowInteractUI(true))
@@ -56,9 +61,11 @@ public class PlayerInteract : InteractBase
     }
 
     /// <summary>
-    /// プレイヤーがインタラクトできる範囲内にいるか確認するメソッド。
+    /// 
+    /// プレイヤーがインタラクトできる範囲内にいるか確認するメソッド
+    /// 
     /// </summary>
-    /// <returns>インタラクトできる場合はtrue、できない場合はfalseを返す。</returns>
+    /// <returns>インタラクトできる場合はtrue、できない場合はfalseを返す</returns>
     private bool CanInteract()
     {
         // プレイヤーの周囲にインタラクト可能なオブジェクトがあるかを判定
@@ -67,8 +74,11 @@ public class PlayerInteract : InteractBase
     }
 
     /// <summary>
+    /// 
     /// インタラクト処理を実行するメソッド
-    /// インタラクトできるオブジェクトに対して処理を行う。
+    ///
+    /// インタラクトできるオブジェクトに対して処理を行う
+    /// 
     /// </summary>
     private void TryInteract()
     {
@@ -86,18 +96,18 @@ public class PlayerInteract : InteractBase
     }
 
     /// <summary>
+    /// 
     /// 会話ウィンドウとテキストを表示するメソッド
+    /// 
+    /// 会話ウィンドウの表示・非表示を制御する処理
+    /// テキストの表示・非表示を制御する処理
+    /// 
+    /// 引数：(指定したいフラグ(ture || false))
+    /// 
     /// </summary>
     private void ShowDialogueWindow(bool isVisible)
     {
-        if (dialogueWindow != null)
-        {
             dialogueWindow.SetActive(isVisible);
-        }
-
-        if (dialogueText != null)
-        {
-            dialogueText.gameObject.SetActive(isVisible);  // テキストも表示・非表示を制御
-        }
+            dialogueText.gameObject.SetActive(isVisible);
     }
 }

@@ -10,7 +10,7 @@ public class EnemyStatusManager : StatusManagerBase
     //[SerializeField, Header("敵の特別なステータス")] private int aggressionLevel = 5;
 
     /// <summary>
-    /// 敵固有の死亡処理メソッド
+    /// ・敵固有の死亡処理
     /// </summary>
     protected override void Die()
     {

@@ -13,26 +13,27 @@ public class NPCInteract_InnKeeper : InteractBase
     //=== シリアライズ ===
     [SerializeField, Header("最初のセリフ")] private string initialDialogue;
     [SerializeField, Header("通常会話リスト")] private List<string> conversationList;
-    [SerializeField, Header("会話テキストを表示するUIのText")] private Text dialogueText;  // Textコンポーネントを参照   [SerializeField, Header("会話ウィンドウのImage")] private Image dialogueWindow;  // 会話ウィンドウのImageコンポーネント
-    [SerializeField, Header("会話ウィンドウのImage")] private GameObject dialogueWindow;  // 会話ウィンドウのImageコンポーネント
+    [SerializeField, Header("会話テキストを表示するUIのText")] private Text dialogueText;
+    [SerializeField, Header("会話ウィンドウのImage")] private GameObject dialogueWindow;
 
     [SerializeField, Header("宿屋の価格")] private int innPrice;
     [SerializeField, Header("宿屋の宿泊メッセージ")] private string innMessage;
 
-    [SerializeField, Header("インタラクトUIを制御するPlayerInteract")] private PlayerInteract playerInteract;  // PlayerInteractを参照
+    [SerializeField, Header("インタラクトUIを制御するPlayerInteract")] private PlayerInteract playerInteract;
     [SerializeField, Header("PlayerControllerをアタッチ")] private PlayerController playerController;
     [SerializeField, Header("PlayerStatusManagerをアタッチ")] private PlayerStatusManager playerStatusManager;
 
     //=== 変数宣言 ===
-    private int currentDialogueIndex = 0;  // 現在の会話のインデックス
-    private bool isConversationActive = false;
-    private IDisposable conversationSubscription; // 購読を管理する変数
+    private int currentDialogueIndex = 0;           // 現在の会話のインデックス
+    private bool isConversationActive = false;      // このNPC固有の会話フラグ
+    private IDisposable conversationSubscription;   // 購読を管理する変数
 
     //=== プロパティ ===
     public string InititalDialogue => initialDialogue;
 
     /// <summary>
-    /// インタラクトメソッド
+    /// ・継承したインタラクト処理内で
+    /// 　このNPCが会話した時のメソッドを呼び出す
     /// </summary>
     public override void Interact()
     {
@@ -41,7 +42,9 @@ public class NPCInteract_InnKeeper : InteractBase
     }
 
     /// <summary>
-    /// 会話の開始処理メソッド
+    /// ・NPCの名前やセリフ等の情報を設定し、
+    /// 　それを表示される
+    /// ・リストによる会話自の会話進行処理
     /// </summary>
     private void StartConversation()
     {
@@ -77,7 +80,11 @@ public class NPCInteract_InnKeeper : InteractBase
     }
 
     /// <summary>
-    /// 宿泊確認を表示するメソッド
+    /// ・宿泊確認の選択肢処理
+    /// ・選択肢後、各パターン(Y：はい、N：いいえ)
+    /// └Y：所持金からお金を払い体力を全回復する
+    /// └N：何もしない
+    /// 
     /// </summary>
     private void DisplayInnConfirmation()
     {
@@ -127,8 +134,10 @@ public class NPCInteract_InnKeeper : InteractBase
     }
 
     /// <summary>
-    /// 会話を表示するメソッド
+    /// ・会話を表示するメソッド
+    /// ・会話ウィンドウとテキストを表示
     /// </summary>
+    /// <param name="dialogue">表示するセリフ</param>
     private void DisplayDialogue(string dialogue)
     {
         ShowDialogueWindow(true);       // 会話ウィンドウとテキストを表示
@@ -136,7 +145,7 @@ public class NPCInteract_InnKeeper : InteractBase
     }
 
     /// <summary>
-    /// 会話が終了したらUIを非表示にするメソッド
+    /// ・会話が終了した際にUIを非表示にする
     /// </summary>
     private void EndConversation()
     {
@@ -150,8 +159,9 @@ public class NPCInteract_InnKeeper : InteractBase
     }
 
     /// <summary>
-    /// 会話ウィンドウの表示・非表示を切り替えるメソッド
+    /// ・会話ウィンドウの表示・非表示を切り替える処理
     /// </summary>
+    /// <param name="isVisible">メッセージウィンドウの有効・無効</param>
     private void ShowDialogueWindow(bool isVisible)
     {
         dialogueWindow.SetActive(isVisible);  // ウィンドウの表示/非表示を設定
