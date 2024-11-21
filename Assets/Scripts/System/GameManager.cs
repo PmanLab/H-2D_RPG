@@ -9,10 +9,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;     // シングルトン用
 
     /// <summary>
-    /// 第一初期化メソッド
-    /// 
-    /// シングルトン生成処理(GameManager)
-    /// 
+    /// ・シングルトン生成処理(GameManager)
     /// </summary>
     private void Awake()
     {
@@ -29,10 +26,7 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 第二初期化メソッド
-    /// 
-    /// FPS値を固定する処理
-    /// 
+    /// ・FPS値を固定する処理
     /// </summary>
     private void Start()
     {
