@@ -21,6 +21,9 @@ public abstract class StatusManagerBase : MonoBehaviour
 
     /// <summary>
     /// 第一初期化処理メソッド
+    /// 
+    /// 最大HPを設定する処理
+    /// 
     /// </summary>
     protected virtual void Awake()
     {
@@ -28,7 +31,13 @@ public abstract class StatusManagerBase : MonoBehaviour
     }
 
     /// <summary>
+    /// 
     /// ダメージを受ける処理メソッド
+    /// 
+    /// 指定した値分だけ
+    /// ダメージを受ける処理
+    /// 
+    /// 
     /// </summary>
     public void TakeDamage(int damage)
     {
@@ -40,7 +49,12 @@ public abstract class StatusManagerBase : MonoBehaviour
     }
 
     /// <summary>
+    /// 
     /// 回復する処理メソッド
+    /// 
+    /// 指定した値だけ
+    /// 回復する処理
+    /// 
     /// </summary>
     public void Heal(int amount)
     {
@@ -53,7 +67,11 @@ public abstract class StatusManagerBase : MonoBehaviour
     }
 
     /// <summary>
-    /// 死亡時の処理メソッド（各クラスでオーバーライド可能）
+    /// 
+    /// 死亡時の処理メソッド
+    /// 
+    /// （各クラスでオーバーライド可能）
+    /// 
     /// </summary>
     protected virtual void Die()
     {

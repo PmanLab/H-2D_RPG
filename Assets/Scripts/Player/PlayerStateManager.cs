@@ -23,6 +23,9 @@ public class PlayerStateManager : MonoBehaviour
 
     /// <summary>
     /// 第一初期化処理
+    /// 
+    /// シングルトン生成処理(PlayerStateManager)
+    /// 
     /// </summary>
     private void Awake()
     {
@@ -40,6 +43,10 @@ public class PlayerStateManager : MonoBehaviour
 
     /// <summary>
     /// 第二初期化処理
+    /// 
+    /// NPCとの会話状態  監視処理
+    /// Playerの状態変更 監視処理
+    /// 
     /// </summary>
     private void Start()
     {
@@ -80,10 +87,13 @@ public class PlayerStateManager : MonoBehaviour
             }
         });
     }
-        
+
 
     /// <summary>
     /// OnDestroyメソッド 
+    /// 
+    /// ReactivePropertyを解放
+    /// 
     /// </summary>
     private void OnDestroy()
     {
@@ -94,6 +104,9 @@ public class PlayerStateManager : MonoBehaviour
 
     /// <summary>
     /// 会話開始メソッド
+    /// 
+    /// 会話フラグをONにする
+    /// 
     /// </summary>
     public void StartConversation()
     {
@@ -102,6 +115,9 @@ public class PlayerStateManager : MonoBehaviour
 
     /// <summary>
     /// 会話終了メソッド
+    /// 
+    /// 会話フラグをOFFにする
+    /// 
     /// </summary>
     public void EndConversation()
     {
@@ -110,6 +126,9 @@ public class PlayerStateManager : MonoBehaviour
 
     /// <summary>
     /// プレイヤー状態設定メソッド
+    /// 
+    /// 引数：セットしたいプレイヤーの状態(列挙：PlayerState)
+    /// 
     /// </summary>
     /// <param name="playerState"></param>
     public void ChangePlayeState(PlayerState playerState)
@@ -119,6 +138,9 @@ public class PlayerStateManager : MonoBehaviour
 
     /// <summary>
     /// プレイヤー状態取得メソッド
+    /// 
+    /// 現在のプレイヤー状態を取得する(列挙：PlayerState)
+    /// 
     /// </summary>
     /// <returns></returns>
     public PlayerState GetPlayerState()

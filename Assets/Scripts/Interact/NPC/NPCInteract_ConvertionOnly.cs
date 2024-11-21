@@ -29,7 +29,12 @@ public class NPCInteract_ConvertionOnly : InteractBase
     public string InititalDialogue => initialDialogue;
 
     /// <summary>
+    /// 
     /// インタラクトメソッド
+    /// 
+    /// 継承したインタラクト処理内で
+    /// このNPCが会話した時のメソッドを呼び出す
+    /// 
     /// </summary>
     public override void Interact()
     {
@@ -38,7 +43,14 @@ public class NPCInteract_ConvertionOnly : InteractBase
     }
 
     /// <summary>
+    /// 
     /// 会話の開始処理メソッド
+    /// 
+    /// NPCの名前やセリフ等の情報を設定し、
+    /// それを表示される
+    /// 
+    /// リストによる会話自の会話進行処理
+    /// 
     /// </summary>
     private void StartConversation()
     {

@@ -9,15 +9,15 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("PlayerMoveをアタッチ")] private PlayerMove playerMove;
 
     // PlayerInputのアクションマッピング
-    private InputAction moveForwardAction;
-    private InputAction moveBackwardAction;
-    private InputAction moveLeftAction;
-    private InputAction moveRightAction;
-    private InputAction attackAction;
+    private InputAction moveForwardAction;      // 前 移動用
+    private InputAction moveBackwardAction;     // 後 移動用
+    private InputAction moveLeftAction;         // 左 移動用
+    private InputAction moveRightAction;        // 右 移動用
+    private InputAction attackAction;           // 攻撃 用
 
     //=== 変数宣言 ===
-    private ReactiveProperty<Vector3> moveInput = new ReactiveProperty<Vector3>();  // Vector2からVector3に変更
-    private ReactiveProperty<bool> isAttacking = new ReactiveProperty<bool>(false);
+    private ReactiveProperty<Vector3> moveInput = new ReactiveProperty<Vector3>();  // 移動検知用
+    private ReactiveProperty<bool> isAttacking = new ReactiveProperty<bool>(false); // 攻撃検知用フラグ
     private bool isConversationActive = false;  // 会話中かどうかのフラグ
 
     //=== プロパティ ===
@@ -26,10 +26,19 @@ public class PlayerController : MonoBehaviour
 
     /// <summary>
     /// 第一初期化メソッド
+    /// 
+    /// PlayerInputのAction情報を取得し、
+    /// 取得した情報を変数に格納
+    /// 
+    /// 入力をReactivePropertyにバインド
+    /// 
+    /// 攻撃監視処理と攻撃処理の内容
+    /// 
+    /// 
     /// </summary>
     private void Start()
     {
-        // Actionの取得
+        //--- Actionの取得 ---
         var playerControls = playerInput.actions;
         moveForwardAction = playerControls["MoveForward"];
         moveBackwardAction = playerControls["MoveBackward"];
@@ -37,7 +46,7 @@ public class PlayerController : MonoBehaviour
         moveRightAction = playerControls["MoveRight"];
         attackAction = playerControls["Attack"];
 
-        // 入力をReactivePropertyにバインド
+        //--- 入力をReactivePropertyにバインド ---
         moveForwardAction.performed += ctx => UpdateMoveInput();
         moveBackwardAction.performed += ctx => UpdateMoveInput();
         moveLeftAction.performed += ctx => UpdateMoveInput();
@@ -50,7 +59,7 @@ public class PlayerController : MonoBehaviour
 
         attackAction.performed += _ => isAttacking.Value = true;
 
-        // プレイヤーの状態に応じた動作
+        //--- プレイヤーの状態に応じた動作 ---
         isAttacking.Subscribe(attacking =>
         {
             if (attacking)
@@ -61,12 +70,18 @@ public class PlayerController : MonoBehaviour
         });
     }
 
+    /// <summary>
+    /// 
+    /// 入力行動更新メソッド
+    /// 
+    /// 会話していない時、
+    /// インプット時の移動判定処理(ここでは入力検知のみ)
+    /// 
+    /// </summary>
     private void UpdateMoveInput()
     {
         // 会話中は移動しないようにする
         if (isConversationActive) return;
-
-
 
         // 各キー入力に基づいて移動方向を決定
         float x = 0f;
@@ -91,13 +106,28 @@ public class PlayerController : MonoBehaviour
         moveInput.Value = direction;  // 3D移動に合わせたVector3
     }
 
+
+    /// <summary>
+    /// 
+    /// 更新処理メソッド
+    /// 
+    /// 入力情報を検知し、
+    /// プレイヤーが移動する処理を実行する
+    /// 
+    /// </summary>
     private void FixedUpdate()
     {
-        // 移動の処理
-        playerMove.Move(moveInput.Value);
+        playerMove.Move(moveInput.Value);   // 移動の処理
     }
 
-    // 会話開始時に移動を停止
+
+    /// <summary>
+    /// 
+    /// (会話フラグON)プレイヤー移動停止メソッド
+    /// 
+    /// 会話開始時に移動を停止する処理
+    /// 
+    /// </summary>
     public void StopMovement()
     {
         isConversationActive = true;
@@ -112,10 +142,12 @@ public class PlayerController : MonoBehaviour
 
     /// <summary>
     /// OnDestroyメソッド 
+    /// 
+    /// ReactivePropertyを解放
+    /// 
     /// </summary>
     private void OnDestroy()
     {
-        // ReactivePropertyを解放
         moveInput.Dispose();
         isAttacking.Dispose();
     }

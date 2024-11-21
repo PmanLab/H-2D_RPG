@@ -17,12 +17,20 @@ public abstract class InteractBase : MonoBehaviour
     public string InteractableName => interactableName;
     
     /// <summary>
-    /// インタラクト時の処理(継承クラスで処理を書く)
+    ///
+    /// インタラクト時の処理メソッド
+    /// (継承クラスで処理を書く)
+    /// 
     /// </summary>
     public abstract void Interact();
 
     /// <summary>
+    /// 
     /// UIの表示・非表示を切り替えるメソッド
+    ///  
+    /// オブジェクトを無効・有効にする処理
+    /// 引数：(有効・無効(true || false))
+    /// 
     /// </summary>
     public virtual void ShowInteractUI(bool isVisible)
     {
@@ -30,7 +38,12 @@ public abstract class InteractBase : MonoBehaviour
     }
 
     /// <summary>
+    /// 
     /// テキストにNPC名をセットするメソッド
+    /// 
+    /// インスペクターで指定した名前を
+    /// メッセージウィンドウで表示
+    /// 
     /// </summary>
     public virtual void SetNpcName()
     {

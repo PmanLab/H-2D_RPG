@@ -27,7 +27,12 @@ public class NPCInteract_ItemExchange : InteractBase
     public string InititalDialogue => initialDialogue;
 
     /// <summary>
+    /// 
     /// インタラクトメソッド
+    /// 
+    /// 継承したインタラクト処理内で
+    /// このNPCが会話した時のメソッドを呼び出す
+    /// 
     /// </summary>
     public override void Interact()
     {
@@ -36,7 +41,14 @@ public class NPCInteract_ItemExchange : InteractBase
     }
 
     /// <summary>
+    /// 
     /// 会話の開始処理メソッド
+    /// 
+    /// NPCの名前やセリフ等の情報を設定し、
+    /// それを表示される
+    /// 
+    /// リストによる会話自の会話進行処理
+    /// 
     /// </summary>
     private void StartConversation()
     {
@@ -73,7 +85,12 @@ public class NPCInteract_ItemExchange : InteractBase
     }
 
     /// <summary>
+    /// 
     /// 会話を表示するメソッド
+    /// 
+    ///  会話ウィンドウとテキストを表示
+    ///  テキストをセット
+    /// 
     /// </summary>
     private void DisplayDialogue(string dialogue)
     {
@@ -96,7 +113,11 @@ public class NPCInteract_ItemExchange : InteractBase
     }
 
     /// <summary>
+    /// 
     /// 会話ウィンドウの表示・非表示を切り替えるメソッド
+    /// 
+    /// 引数：(有効・無効(true || false)l)
+    /// 
     /// </summary>
     private void ShowDialogueWindow(bool isVisible)
     {
