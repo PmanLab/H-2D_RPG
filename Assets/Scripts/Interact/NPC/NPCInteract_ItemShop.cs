@@ -62,7 +62,7 @@ public class NPCInteract_ItemShop : InteractBase
             playerController.StopMovement();    // 会話中はプレイヤーの移動を停止
             DisplayDialogue(initialDialogue);   // 最初のセリフを表示
 
-            playerInteract.ShowInteractUI(false); // 会話中はインタラクトUIを非表示にする
+            ShowInteractUI(false); // 会話中はインタラクトUIを非表示にする
 
             // 前回の購読を解除（もし存在すれば）
             conversationSubscription?.Dispose();
@@ -153,7 +153,7 @@ public class NPCInteract_ItemShop : InteractBase
         Debug.Log("会話を終了しました・.");
         isConversationActive = false;
         ShowDialogueWindow(false);              // 会話ウィンドウを非表示
-        playerInteract.ShowInteractUI(true);    // インタラクトUIを再表示
+        ShowInteractUI(true);    // インタラクトUIを再表示
         playerController.ResumeMovement();      // プレイヤーの移動を再開
 
         conversationSubscription?.Dispose();    // 購読を解除

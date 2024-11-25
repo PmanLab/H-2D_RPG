@@ -94,7 +94,7 @@ public class NPCInteract_ItemExchange : InteractBase
         Debug.Log("会話を終了しました・.");
         isConversationActive = false;
         ShowDialogueWindow(false);              // 会話ウィンドウを非表示
-        playerInteract.ShowInteractUI(true);    // インタラクトUIを再表示
+        ShowInteractUI(true);    // インタラクトUIを再表示
         playerController.ResumeMovement();      // プレイヤーの移動を再開
 
         conversationSubscription?.Dispose();    // 購読を解除

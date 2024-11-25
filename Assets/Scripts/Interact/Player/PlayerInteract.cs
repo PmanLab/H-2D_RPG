@@ -23,19 +23,13 @@ public class PlayerInteract : InteractBase
     private InputAction interactAction;  // "Interact"アクションを保持する変数
 
     /// <summary>
-    /// 
     /// インタラクションメソッド
-    /// 
     /// </summary>
     public override void Interact(){}
 
     /// <summary>
-    /// 
-    /// 第二初期化処理
-    /// 
-    /// PlayerInputからインタラクトアクションを取得し、
+    /// ・PlayerInputからインタラクトアクションを取得し、
     /// インタラクト処理の監視を開始する
-    /// 
     /// </summary>
     private void Start()
     {
@@ -58,12 +52,10 @@ public class PlayerInteract : InteractBase
             .Where(_ => !CanInteract())
             .Subscribe(_ => ShowInteractUI(false))
             .AddTo(this);
-    }
+    }   
 
     /// <summary>
-    /// 
-    /// プレイヤーがインタラクトできる範囲内にいるか確認するメソッド
-    /// 
+    /// ・プレイヤーがインタラクトできる範囲内にいるか確認する
     /// </summary>
     /// <returns>インタラクトできる場合はtrue、できない場合はfalseを返す</returns>
     private bool CanInteract()
@@ -96,18 +88,12 @@ public class PlayerInteract : InteractBase
     }
 
     /// <summary>
-    /// 
-    /// 会話ウィンドウとテキストを表示するメソッド
-    /// 
-    /// 会話ウィンドウの表示・非表示を制御する処理
-    /// テキストの表示・非表示を制御する処理
-    /// 
-    /// 引数：(指定したいフラグ(ture || false))
-    /// 
+    /// ・会話ウィンドウの表示・非表示を切り替える処理
     /// </summary>
+    /// <param name="isVisible">メッセージウィンドウの有効・無効</param>
     private void ShowDialogueWindow(bool isVisible)
     {
-            dialogueWindow.SetActive(isVisible);
-            dialogueText.gameObject.SetActive(isVisible);
+        dialogueWindow.SetActive(isVisible);  // ウィンドウの表示/非表示を設定
+        dialogueText.gameObject.SetActive(isVisible);  // テキストの表示/非表示を設定
     }
 }
