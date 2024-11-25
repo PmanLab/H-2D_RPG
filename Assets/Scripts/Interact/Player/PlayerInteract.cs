@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UniRx;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 /// <summary>
 /// プレイヤーインタラクト(InteractBase継承)
@@ -13,11 +12,6 @@ public class PlayerInteract : InteractBase
     [SerializeField, Header("インタラクト可能な距離")] private float interactRange = 2.0f;  // インタラクト可能な範囲
     [SerializeField, Header("インタラクト用のレイヤー")] private LayerMask interactableLayer;  // インタラクト可能なオブジェクトのレイヤー
     [SerializeField, Header("PlayerInputをアタッチ")] private PlayerInput playerInput;  // PlayerInputコンポーネント
-
-    // 会話ウィンドウ
-    [SerializeField, Header("会話テキストを表示するUI")] private GameObject dialogueWindow; // セリフ表示用ウィンドウ
-    [SerializeField, Header("会話テキスト")] private Text dialogueText;  // セリフ表示用のTextコンポーネント
-
 
     //=== 変数宣言 ===
     private InputAction interactAction;  // "Interact"アクションを保持する変数
@@ -62,15 +56,11 @@ public class PlayerInteract : InteractBase
     {
         // プレイヤーの周囲にインタラクト可能なオブジェクトがあるかを判定
         Collider[] colliders = Physics.OverlapSphere(transform.position, interactRange, interactableLayer);
-        return colliders.Length > 0 && !dialogueWindow.activeSelf;  // 会話ウィンドウが表示中でない場合にインタラクト可能
+        return colliders.Length > 0 && !DialogueWindow.activeSelf;  // 会話ウィンドウが表示中でない場合にインタラクト可能
     }
 
     /// <summary>
-    /// 
-    /// インタラクト処理を実行するメソッド
-    ///
-    /// インタラクトできるオブジェクトに対して処理を行う
-    /// 
+    /// ・インタラクトできるオブジェクトに対して処理を行う
     /// </summary>
     private void TryInteract()
     {
@@ -85,15 +75,5 @@ public class PlayerInteract : InteractBase
                 break;  // 最初のインタラクト可能オブジェクトでインタラクトを実行したらループを抜ける
             }
         }
-    }
-
-    /// <summary>
-    /// ・会話ウィンドウの表示・非表示を切り替える処理
-    /// </summary>
-    /// <param name="isVisible">メッセージウィンドウの有効・無効</param>
-    private void ShowDialogueWindow(bool isVisible)
-    {
-        dialogueWindow.SetActive(isVisible);  // ウィンドウの表示/非表示を設定
-        dialogueText.gameObject.SetActive(isVisible);  // テキストの表示/非表示を設定
     }
 }

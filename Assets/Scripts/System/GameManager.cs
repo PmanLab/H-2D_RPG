@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     //=== インスタンス ===
     public static GameManager instance;     // シングルトン用
 
+    //=== メソッド ===
     /// <summary>
     /// ・シングルトン生成処理(GameManager)
     /// </summary>

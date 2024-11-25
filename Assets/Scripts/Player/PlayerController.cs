@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
     //=== プロパティ ===
     public bool IsMoving => moveInput.Value != Vector3.zero; // 移動中かどうかを判定するプロパティ
 
-
+    //=== メソッド ===
     /// <summary>
     /// ・PlayerInputのAction情報を取得し、
     /// 取得した情報を変数に格納

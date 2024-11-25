@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UniRx;
 
 /// <summary>
@@ -11,18 +9,10 @@ using UniRx;
 public class NPCInteract_ItemShop : InteractBase
 {
     //=== シリアライズ ===
-
-    [SerializeField, Header("最初のセリフ")] private string initialDialogue;
-    [SerializeField, Header("通常会話リスト")] private List<string> conversationList;
-    [SerializeField, Header("会話テキストを表示するUIのText")] private Text dialogueText;  // Textコンポーネントを参照   [SerializeField, Header("会話ウィンドウのImage")] private Image dialogueWindow;  // 会話ウィンドウのImageコンポーネント
-    [SerializeField, Header("会話ウィンドウのImage")] private GameObject dialogueWindow;  // 会話ウィンドウのImageコンポーネント
-
     [SerializeField, Header("アイテム価格")] private int itemPrice;
     [SerializeField, Header("アイテムの購入確認メッセージ")] private string purchaseMessage;
 
     [SerializeField, Header("インタラクトUIを制御するPlayerInteract")] private PlayerInteract playerInteract;  // PlayerInteractを参照
-    [SerializeField, Header("PlayerControllerをアタッチ")] private PlayerController playerController;
-    [SerializeField, Header("PlayerStatusManagerをアタッチ")] private PlayerStatusManager playerStatusManager;
 
     //=== 変数宣言 ===
     private int currentDialogueIndex = 0;  // 現在の会話のインデックス
@@ -31,10 +21,7 @@ public class NPCInteract_ItemShop : InteractBase
     private IDisposable conversationSubscription; // 購読を管理する変数
 
 
-    //=== プロパティ ===
-    public string InititalDialogue => initialDialogue;
-
-
+    //=== メソッド ===
     /// <summary>
     ///・ 継承したインタラクト処理内で
     /// 　このNPCが会話した時のメソッドを呼び出す
@@ -59,8 +46,8 @@ public class NPCInteract_ItemShop : InteractBase
             currentDialogueIndex = 0;  // セリフインデックスをリセット
             isConversationActive = true;
 
-            playerController.StopMovement();    // 会話中はプレイヤーの移動を停止
-            DisplayDialogue(initialDialogue);   // 最初のセリフを表示
+            PlayerController.StopMovement();    // 会話中はプレイヤーの移動を停止
+            DisplayDialogue(InitialDialogue);   // 最初のセリフを表示
 
             ShowInteractUI(false); // 会話中はインタラクトUIを非表示にする
 
@@ -69,13 +56,13 @@ public class NPCInteract_ItemShop : InteractBase
 
             // 新しい購読を登録
             conversationSubscription = Observable.EveryUpdate()
-                .Where(_ => isConversationActive && !playerController.IsMoving && Input.GetKeyDown(KeyCode.Space))
+                .Where(_ => isConversationActive && !PlayerController.IsMoving && Input.GetKeyDown(KeyCode.Space))
                 .Subscribe(_ =>
                 {
-                    if (currentDialogueIndex < conversationList.Count)
+                    if (currentDialogueIndex < ConversationList.Count)
                     {
                         // 次のセリフを表示
-                        DisplayDialogue(conversationList[currentDialogueIndex]);
+                        DisplayDialogue(ConversationList[currentDialogueIndex]);
                         currentDialogueIndex++; // 次のセリフインデックスに進む
                     }
                     else
@@ -121,9 +108,9 @@ public class NPCInteract_ItemShop : InteractBase
             {
                 if (Input.GetKeyDown(KeyCode.Y))  // 「Y」が押された場合
                 {
-                    if (playerStatusManager.CanAfford(itemPrice))
+                    if (PlayerStatusManager.CanAfford(itemPrice))
                     {
-                        playerStatusManager.SpendMoney(itemPrice);
+                        PlayerStatusManager.SpendMoney(itemPrice);
                         Debug.Log("アイテムを購入しました！");
                         DisplayDialogue("アイテムを購入しました！");
 
@@ -167,7 +154,7 @@ public class NPCInteract_ItemShop : InteractBase
     private void DisplayDialogue(string dialogue)
     {
         ShowDialogueWindow(true);       
-        dialogueText.text = dialogue;   
+        DialogueText.text = dialogue;   
     }
 
     /// <summary>
@@ -179,20 +166,10 @@ public class NPCInteract_ItemShop : InteractBase
         isConversationActive = false;
         ShowDialogueWindow(false);              // 会話ウィンドウを非表示
         ShowInteractUI(true);    // インタラクトUIを再表示
-        playerController.ResumeMovement();      // プレイヤーの移動を再開
+        PlayerController.ResumeMovement();      // プレイヤーの移動を再開
 
         conversationSubscription?.Dispose();    // 購読を解除
 
         isPurchaseConfirmationActive = false;
-    }
-
-    /// <summary>
-    /// ・会話ウィンドウの表示・非表示を切り替える処理
-    /// </summary>
-    /// <param name="isVisible">メッセージウィンドウの有効・無効</param>
-    private void ShowDialogueWindow(bool isVisible)
-    {
-        dialogueWindow.SetActive(isVisible);  // ウィンドウの表示/非表示を設定
-        dialogueText.gameObject.SetActive(isVisible);  // テキストの表示/非表示を設定
     }
 }

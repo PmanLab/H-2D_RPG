@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
 using UnityEditor;
-using UnityEngine.SceneManagement;
 
-public class ButtonManager : MonoBehaviour
+public class ButtonManager
 {
-
+    //=== メソッド ===
     /// <summary>
     /// ・シーンを移動する処理
     /// </summary>

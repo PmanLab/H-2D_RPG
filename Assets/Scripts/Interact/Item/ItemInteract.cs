@@ -12,7 +12,7 @@ public class ItemInteract : InteractBase
     [SerializeField, Header("開いた後のメッセージ")] private string openedMessage;
     [SerializeField, Header("名前表示用のUIテキスト")] private Text nameDisplayText; // オブジェクト名を表示するTextコンポーネント
     
-
+    //=== メソッド ===
     /// <summary>
     /// ・宝箱を開ける時の処理
     /// </summary>
