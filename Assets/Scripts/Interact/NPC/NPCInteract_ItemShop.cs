@@ -83,7 +83,6 @@ public class NPCInteract_ItemShop : InteractBase
                         // 会話が終了したらアイテム購入確認を表示
                         if (!isPurchaseConfirmationActive)
                         {
-                            isPurchaseConfirmationActive = true;
                             // 購入確認の表示メソッドを呼び出す
                             DisplayPurchaseConfirmation();
                         }
@@ -122,13 +121,39 @@ public class NPCInteract_ItemShop : InteractBase
             {
                 if (Input.GetKeyDown(KeyCode.Y))  // 「Y」が押された場合
                 {
-                    HandleItemPurchase();
-                    EndConversation();
+                    if (playerStatusManager.CanAfford(itemPrice))
+                    {
+                        playerStatusManager.SpendMoney(itemPrice);
+                        Debug.Log("アイテムを購入しました！");
+                        DisplayDialogue("アイテムを購入しました！");
+
+                        // アイテム付与処理を追加する場所
+
+                        // アイテム購入後、2秒後に会話終了
+                        Observable.Timer(TimeSpan.FromSeconds(2))
+                            .Subscribe(_ => EndConversation())
+                            .AddTo(this);
+                    }
+                    else
+                    {
+                        DisplayDialogue("お金が足りません！");
+                        Debug.Log("お金が足りません！");
+
+                        // お金が足りない場合も2秒後に会話終了
+                        Observable.Timer(TimeSpan.FromSeconds(2))
+                            .Subscribe(_ => EndConversation())
+                            .AddTo(this);
+                    }
                 }
                 else if (Input.GetKeyDown(KeyCode.N))  // 「N」が押された場合
                 {
                     DisplayDialogue("購入がキャンセルされました");
-                    EndConversation();
+
+                    // メッセージ表示指定した待機時間後、会話終了
+                    Observable.Timer(TimeSpan.FromSeconds(ConstantManager.interactWaitingTime))
+                    .Subscribe(_ => EndConversation())
+                    .AddTo(this);
+
                 }
             }).AddTo(this);  // メモリリーク防止
     }
@@ -170,40 +195,4 @@ public class NPCInteract_ItemShop : InteractBase
         dialogueWindow.SetActive(isVisible);  // ウィンドウの表示/非表示を設定
         dialogueText.gameObject.SetActive(isVisible);  // テキストの表示/非表示を設定
     }
-
-    /// <summary>
-    /// 
-    /// 購入処理をPlayerStatusManagerを使用して行うメソッド
-    /// 
-    /// 購入処理の一連をまとめてある
-    /// ※今は買うか買わないかぐらい
-    /// 
-    /// </summary>
-    private void HandleItemPurchase()
-    {
-        if (playerStatusManager.CurrentMoney >= itemPrice)
-        {
-            playerStatusManager.SpendMoney(itemPrice);
-            Debug.Log("アイテムを購入しました！");
-            DisplayDialogue("アイテムを購入しました！");
-
-            // アイテム付与処理を追加する場所
-
-            // アイテム購入後、2秒後に会話終了
-            Observable.Timer(TimeSpan.FromSeconds(2))
-                .Subscribe(_ => EndConversation())
-                .AddTo(this);
-        }
-        else
-        {
-            DisplayDialogue("お金が足りません！");
-            Debug.Log("お金が足りません！");
-
-            // お金が足りない場合も2秒後に会話終了
-            Observable.Timer(TimeSpan.FromSeconds(2))
-                .Subscribe(_ => EndConversation())
-                .AddTo(this);
-        }
-    }
-
 }

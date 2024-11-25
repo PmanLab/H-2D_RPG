@@ -107,8 +107,8 @@ public class NPCInteract_InnKeeper : InteractBase
                         playerStatusManager.MaxHeal(); // プレイヤーを回復
                         DisplayDialogue(innMessage); // 宿泊メッセージを表示
 
-                        // 宿泊メッセージ後に2秒待機して会話終了
-                        Observable.Timer(TimeSpan.FromSeconds(2))
+                        // メッセージ表示指定した待機時間後、会話終了
+                        Observable.Timer(TimeSpan.FromSeconds(ConstantManager.interactWaitingTime))
                             .Subscribe(_ => EndConversation())
                             .AddTo(this);
                     }
@@ -116,8 +116,8 @@ public class NPCInteract_InnKeeper : InteractBase
                     {
                         DisplayDialogue("お金が足りません");
 
-                        // お金が足りない場合も2秒後に会話終了
-                        Observable.Timer(TimeSpan.FromSeconds(2))
+                        // メッセージ表示指定した待機時間後、会話終了
+                        Observable.Timer(TimeSpan.FromSeconds(ConstantManager.interactWaitingTime))
                             .Subscribe(_ => EndConversation())
                             .AddTo(this);
                     }
@@ -126,7 +126,7 @@ public class NPCInteract_InnKeeper : InteractBase
                 {
                     DisplayDialogue("宿泊をキャンセルしました");
 
-                    Observable.Timer(TimeSpan.FromSeconds(2)) // 2秒待機
+                    Observable.Timer(TimeSpan.FromSeconds(ConstantManager.interactWaitingTime)) // 2秒待機
                         .Subscribe(_ => EndConversation())
                         .AddTo(this);
                 }
