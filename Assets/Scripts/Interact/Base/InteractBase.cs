@@ -23,7 +23,7 @@ public abstract class InteractBase : MonoBehaviour
     [SerializeField, Header("会話ウィンドウのImage")] private GameObject dialogueWindow;
 
     //=== プロパティ ===
-    public string InteractableName => interactableName;
+    public string InteractableName { get; set; }
     public string InitialDialogue => initialDialogue;
     public List<string> ConversationList => conversationList;
     public Text DialogueText => dialogueText;

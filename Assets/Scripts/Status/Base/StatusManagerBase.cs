@@ -15,9 +15,9 @@ public abstract class StatusManagerBase : MonoBehaviour
     protected ReactiveProperty<int> currentHP; // 現在のHP
 
     //=== プロパティ ===
-    public int MaxHP => maxHP;
-    public int AttackPower => attackPower;
-    public IReadOnlyReactiveProperty<int> CurrentHP => currentHP;
+    public int MaxHP { get; set; }
+    public int AttackPower { get; set; }
+    public IReadOnlyReactiveProperty<int> CurrentHP { get; set; }
 
 
     //=== メソッド ===
