@@ -8,7 +8,7 @@ public class ButtonManager : MonoBehaviour
     /// <summary>
     /// ・シーンを移動する処理
     /// </summary>
-    /// <param name="sceneName">シーン名</param>
+    /// <param name="sceneName">移動先シーン名</param>
     public void LoadScene(string sceneName)
     {
         LoadScene(sceneName);
