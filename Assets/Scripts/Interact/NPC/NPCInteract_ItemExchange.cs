@@ -50,7 +50,7 @@ public class NPCInteract_ItemExchange : InteractBase
         playerController.StopMovement();    // 会話中はプレイヤーの移動を停止
         DisplayDialogue(initialDialogue);   // 最初のセリフを表示
 
-        playerInteract.ShowInteractUI(false); // 会話中はインタラクトUIを非表示にする
+        ShowInteractUI(false); // 会話中はインタラクトUIを非表示にする
 
         // 前回の購読を解除（もし存在すれば）
         conversationSubscription?.Dispose();

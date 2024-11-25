@@ -15,6 +15,11 @@ public abstract class InteractBase : MonoBehaviour
 
     //=== プロパティ ===
     public string InteractableName => interactableName;
+
+    /// <summary>
+    /// ・オブジェクトを無効・有効にする処理
+    /// </summary>
+    /// <param name="isVisible">UIの有効・無効</param>
     public virtual void ShowInteractUI(bool isVisible) => interactUI.SetActive(isVisible);
 
     /// <summary>
@@ -22,17 +27,6 @@ public abstract class InteractBase : MonoBehaviour
     /// └ 継承クラスで処理を書く
     /// </summary>
     public abstract void Interact();
-
-
-    /// <summary>
-    /// ・オブジェクトを無効・有効にする処理
-    /// </summary>
-    /// <param name="isVisible">UIの有効・無効</param>
-    /*public virtual void ShowInteractUI(bool isVisible)
-    {
-        interactUI.SetActive(isVisible);
-        interactUI.SetActive(isVisible);
-    }*/
 
     /// <summary>
     /// ・インスペクターで指定した名前を
