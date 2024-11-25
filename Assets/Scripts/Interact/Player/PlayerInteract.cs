@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UniRx;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 /// <summary>
 /// プレイヤーインタラクト(InteractBase継承)
@@ -14,28 +13,17 @@ public class PlayerInteract : InteractBase
     [SerializeField, Header("インタラクト用のレイヤー")] private LayerMask interactableLayer;  // インタラクト可能なオブジェクトのレイヤー
     [SerializeField, Header("PlayerInputをアタッチ")] private PlayerInput playerInput;  // PlayerInputコンポーネント
 
-    // 会話ウィンドウ
-    [SerializeField, Header("会話テキストを表示するUI")] private GameObject dialogueWindow; // セリフ表示用ウィンドウ
-    [SerializeField, Header("会話テキスト")] private Text dialogueText;  // セリフ表示用のTextコンポーネント
-
-
     //=== 変数宣言 ===
     private InputAction interactAction;  // "Interact"アクションを保持する変数
 
     /// <summary>
-    /// 
     /// インタラクションメソッド
-    /// 
     /// </summary>
     public override void Interact(){}
 
     /// <summary>
-    /// 
-    /// 第二初期化処理
-    /// 
-    /// PlayerInputからインタラクトアクションを取得し、
+    /// ・PlayerInputからインタラクトアクションを取得し、
     /// インタラクト処理の監視を開始する
-    /// 
     /// </summary>
     private void Start()
     {
@@ -58,27 +46,21 @@ public class PlayerInteract : InteractBase
             .Where(_ => !CanInteract())
             .Subscribe(_ => ShowInteractUI(false))
             .AddTo(this);
-    }
+    }   
 
     /// <summary>
-    /// 
-    /// プレイヤーがインタラクトできる範囲内にいるか確認するメソッド
-    /// 
+    /// ・プレイヤーがインタラクトできる範囲内にいるか確認する
     /// </summary>
     /// <returns>インタラクトできる場合はtrue、できない場合はfalseを返す</returns>
     private bool CanInteract()
     {
         // プレイヤーの周囲にインタラクト可能なオブジェクトがあるかを判定
         Collider[] colliders = Physics.OverlapSphere(transform.position, interactRange, interactableLayer);
-        return colliders.Length > 0 && !dialogueWindow.activeSelf;  // 会話ウィンドウが表示中でない場合にインタラクト可能
+        return colliders.Length > 0 && !DialogueWindow.activeSelf;  // 会話ウィンドウが表示中でない場合にインタラクト可能
     }
 
     /// <summary>
-    /// 
-    /// インタラクト処理を実行するメソッド
-    ///
-    /// インタラクトできるオブジェクトに対して処理を行う
-    /// 
+    /// ・インタラクトできるオブジェクトに対して処理を行う
     /// </summary>
     private void TryInteract()
     {
@@ -93,21 +75,5 @@ public class PlayerInteract : InteractBase
                 break;  // 最初のインタラクト可能オブジェクトでインタラクトを実行したらループを抜ける
             }
         }
-    }
-
-    /// <summary>
-    /// 
-    /// 会話ウィンドウとテキストを表示するメソッド
-    /// 
-    /// 会話ウィンドウの表示・非表示を制御する処理
-    /// テキストの表示・非表示を制御する処理
-    /// 
-    /// 引数：(指定したいフラグ(ture || false))
-    /// 
-    /// </summary>
-    private void ShowDialogueWindow(bool isVisible)
-    {
-            dialogueWindow.SetActive(isVisible);
-            dialogueText.gameObject.SetActive(isVisible);
     }
 }

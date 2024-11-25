@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UniRx;
 
 public class PlayerMove : MonoBehaviour
 {
@@ -7,6 +6,8 @@ public class PlayerMove : MonoBehaviour
     [SerializeField, Header("RigidBody")] private Rigidbody rb;
     [SerializeField, Header("移動速度値")] private float moveSpeed = 5.0f;
 
+
+    //=== メソッド ===
     /// <summary>
     /// ・入力情報に基づき、指定した速度で移動する処理
     /// </summary>

@@ -21,6 +21,7 @@ public class PlayerStateManager : MonoBehaviour
     private ReactiveProperty<bool> bIsInConversation = new ReactiveProperty<bool>(false);   // 会話フラグ
     private ReactiveProperty<PlayerState> eCurrentPlayerState = new ReactiveProperty<PlayerState>(PlayerState.Idle); // プレイヤー状態
 
+    //=== メソッド ===
     /// <summary>
     /// ・シングルトン生成処理(PlayerStateManager)
     /// </summary>

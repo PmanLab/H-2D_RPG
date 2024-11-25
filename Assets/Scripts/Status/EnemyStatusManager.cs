@@ -9,6 +9,7 @@ public class EnemyStatusManager : StatusManagerBase
     //=== シリアライズ ===
     //[SerializeField, Header("敵の特別なステータス")] private int aggressionLevel = 5;
 
+    //=== メソッド ===
     /// <summary>
     /// ・敵固有の死亡処理
     /// </summary>

@@ -14,6 +14,8 @@ public class GameStateManager : MonoBehaviour
     private ReactiveProperty<bool> isInPause = new ReactiveProperty<bool>(false);   // ポーズ用フラグ
     private IDisposable pausedSubscription;
 
+
+    //=== メソッド ===
     /// <summary>
     /// ・シングルトン生成処理
     /// </summary>

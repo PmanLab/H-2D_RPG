@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using UniRx;
+using UnityEngine.UI;
 
 /// <summary>
 /// プレイヤーステータスマネージャー(StatusManagerBaseを継承)
@@ -10,27 +10,49 @@ public class PlayerStatusManager : StatusManagerBase
     //=== シリアライズ ===
     //[SerializeField, Header("最大HP")] private int maxHealth = 100;
     [SerializeField, Header("初期所持金")] private int startingMoney = 100;
+    [SerializeField, Header("所持金表示用のUI")] private GameObject currentMoneyUI;            // 所持金を表示するUIまとめ
+    [SerializeField, Header("所持金表示用のテキスト")] private Text currentMoneyDisplayText;  // 所持金を表示するTextコンポーネント
+
 
     //=== 所持金関連 ===
     private int currentMoney; // 所持金
 
     //=== プロパティ ===
-    public int CurrentMoney => currentMoney; // 現在の所持金
+    /// <summary>
+    /// ・現在の所持金を表示用テキストに設定する処理
+    /// </summary>
+    public void SetCurrentMoney() => currentMoneyDisplayText.text = currentMoney.ToString();
 
-    //=== 初期化処理 ===
+    /// <summary>
+    /// ・所持金UI表示・非表示を切り替える処理
+    /// </summary>
+    /// <param name="isVisible">所持金UIの有効・無効</param>
+    public void ShowCurrentMoney(bool isVisible) => currentMoneyUI.SetActive(isVisible);
+
+    /// <summary>
+    /// ・自分のお金と他を比べて結果を返す
+    /// └ 所持金が足りているかを確認するのに使う
+    /// </summary>
+    /// <param name="amount">比べる他対象のお金情報</param>
+    /// <returns></returns>
+    public bool CanAfford(int amount) => currentMoney >= amount;
+
+    //=== メソッド ===
     /// <summary>
     /// ・親クラスのAwakeを呼び出し(StatusManagerBase)
     /// └ 最大HPを設定
-    /// ※所持金の表示
+    /// └ 所持金を初期化
+    /// 
+    /// ・所持金の表示
     /// </summary>
     protected override void Awake()
     {
         base.Awake();  // 親クラスのAwakeを呼び出してHPを初期化
-        currentMoney = startingMoney;  // 所持金を初期化
+        currentMoney = startingMoney;
+        SetCurrentMoney();  // 初期所持金をUIテキストで表示
         Debug.Log($"初期所持金: {currentMoney}円");
     }
 
-    //=== 所持金関連 ===
     /// <summary>
     /// ・所持金から指定した値分だけ減らす
     /// </summary>
@@ -41,6 +63,7 @@ public class PlayerStatusManager : StatusManagerBase
         if (currentMoney >= amount)
         {
             currentMoney -= amount;
+            SetCurrentMoney();
             Debug.Log($"所持金: {currentMoney}円");
             return true;
         }
@@ -58,6 +81,7 @@ public class PlayerStatusManager : StatusManagerBase
     public void AddMoney(int amount)
     {
         currentMoney += amount;
+        SetCurrentMoney();
         Debug.Log($"所持金: {currentMoney}円");
     }
 
@@ -68,16 +92,7 @@ public class PlayerStatusManager : StatusManagerBase
     protected override void Die()
     {
         base.Die();
+        currentMoney = 0;       // 所持金全てを失う
         Debug.Log("プレイヤーが死亡しました！");
-    }
-
-    /// <summary>
-    /// ・自分のお金と他を比べて結果を返す
-    /// </summary>
-    /// <param name="amount">比べる他対象のお金情報</param>
-    /// <returns></returns>
-    public bool CanAfford(int amount)
-    {
-        return currentMoney >= amount;  // 所持金が足りているかを確認
     }
 }
