@@ -2496,8 +2496,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   playerInput: {fileID: 1915051090}
-  dialogueWindow: {fileID: 1625343584}
-  dialogueText: {fileID: 1966791554}
 --- !u!114 &1915051092
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2513,8 +2511,8 @@ MonoBehaviour:
   maxHP: 100
   attackPower: 10
   startingMoney: 100
-  currentMoneyUI: {fileID: 0}
-  currentMoneyDisplayText: {fileID: 0}
+  currentMoneyUI: {fileID: 819180773}
+  currentMoneyDisplayText: {fileID: 1403257569}
 --- !u!1 &1919146952
 GameObject:
   m_ObjectHideFlags: 0
