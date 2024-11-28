@@ -10,7 +10,6 @@ public class ItemInteract : InteractBase
     //=== シリアライズ ===
     [SerializeField, Header("開けられるかどうか")] private bool isLocked;
     [SerializeField, Header("開いた後のメッセージ")] private string openedMessage;
-    [SerializeField, Header("名前表示用のUIテキスト")] private Text nameDisplayText; // オブジェクト名を表示するTextコンポーネント
     
     //=== メソッド ===
     /// <summary>
