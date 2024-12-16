@@ -15,6 +15,6 @@ MonoBehaviour:
   itemName: "\u304D\u305A\u3050\u3059\u308A"
   description: "HP\u309220\u3060\u3051\u304B\u3044\u3075\u304F\u3059\u308B"
   maxStack: 99
-  currentStackCount: 0
+  currentStackCount: 1
   price: 20
   icon: {fileID: 0}
