@@ -13,6 +13,7 @@ public class NPCInteract_InnKeeper : InteractBase
     [SerializeField, Header("宿屋の宿泊メッセージ")] private string innMessage;
 
     [SerializeField, Header("インタラクトUIを制御するPlayerInteract")] private PlayerInteract playerInteract;
+    [SerializeField, Header("Inventoryをアタッチ")] private Inventory inventory;
 
     //=== 変数宣言 ===
     private int currentDialogueIndex = 0;           // 現在の会話のインデックス
@@ -40,6 +41,8 @@ public class NPCInteract_InnKeeper : InteractBase
         SetNpcName();           //NPCの名前をセット
         currentDialogueIndex = 0; // セリフインデックスをリセット
         isConversationActive = true;
+        inventory.isConvertionActive = true;
+        inventory.ShowInventoryUI();
 
         PlayerController.StopMovement(); // 会話中はプレイヤーの移動を停止
         DisplayDialogue(InitialDialogue); // 最初のセリフを表示
@@ -140,6 +143,7 @@ public class NPCInteract_InnKeeper : InteractBase
     {
         Debug.Log("会話を終了しました・.");
         isConversationActive = false;
+        inventory.isConvertionActive = false;
         ShowDialogueWindow(false);              // 会話ウィンドウを非表示
         ShowInteractUI(true);    // インタラクトUIを再表示
         PlayerController.ResumeMovement();      // プレイヤーの移動を再開

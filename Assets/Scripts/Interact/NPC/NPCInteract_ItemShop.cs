@@ -17,7 +17,7 @@ public class NPCInteract_ItemShop : InteractBase
     [SerializeField, Header("インタラクトUIを制御するPlayerInteract")] private PlayerInteract playerInteract;  // PlayerInteractを参照
 
     [SerializeField, Header("購入可能アイテム")] private List<BaseItem> shopItems;
-    [SerializeField, Header("プレイヤーのインベントリ")] private Inventory playerInventory;
+    [SerializeField, Header("プレイヤーのインベントリ")] private Inventory inventory;
 
     [SerializeField, Header("購入可能なアイテムリストを表示するUI")] private GameObject ItemListUI;
     [SerializeField, Header("購入可能なアイテムリストを表示するText")] private Text ItemListText;
@@ -54,6 +54,8 @@ public class NPCInteract_ItemShop : InteractBase
             SetNpcName();               // NPCの名前をセット
             currentDialogueIndex = 0;  // セリフインデックスをリセット
             isConversationActive = true;
+            inventory.isConvertionActive = true;
+            inventory.ShowInventoryUI();
 
             PlayerController.StopMovement();    // 会話中はプレイヤーの移動を停止
             DisplayDialogue(InitialDialogue);   // 最初のセリフを表示
@@ -139,7 +141,7 @@ public class NPCInteract_ItemShop : InteractBase
     {
         if (PlayerStatusManager.CanAfford(item.price))
         {
-            if (playerInventory.AddItem(item))
+            if (inventory.AddItem(item))
             {
                 PlayerStatusManager.SpendMoney(item.price);
                 Debug.Log("アイテムを購入しました！");
@@ -208,6 +210,7 @@ public class NPCInteract_ItemShop : InteractBase
     {
         Debug.Log("会話を終了しました・・・");
         isConversationActive = false;
+        inventory.isConvertionActive = false;
         ShowDialogueWindow(false);              // 会話ウィンドウを非表示
         ShowItemListDialogueWindow(false);      // アイテムリストウィンドウを非表示
         ShowInteractUI(true);                   // インタラクトUIを再表示

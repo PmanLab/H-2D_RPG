@@ -11,10 +11,12 @@ public class PlayerInteract : InteractBase
     //=== シリアライズ ===
     [SerializeField, Header("インタラクト可能な距離")] private float interactRange = 2.0f;  // インタラクト可能な範囲
     [SerializeField, Header("インタラクト用のレイヤー")] private LayerMask interactableLayer;  // インタラクト可能なオブジェクトのレイヤー
-    [SerializeField, Header("PlayerInputをアタッチ")] private PlayerInput playerInput;  // PlayerInputコンポーネント
+    [SerializeField, Header("PlayerInputをアタッチ")] private PlayerInput playerInput;
+    [SerializeField, Header("Inventoryをアタッチ")] private Inventory inventory;
 
     //=== 変数宣言 ===
     private InputAction interactAction;  // "Interact"アクションを保持する変数
+    private InputAction inventoryAction;    // "Inventory"アクションを保持する変数
 
     /// <summary>
     /// インタラクションメソッド
@@ -27,26 +29,33 @@ public class PlayerInteract : InteractBase
     /// </summary>
     private void Start()
     {
-        //--- InputActionを取得 (PlayerInputから「Interact」アクションを取得) ---
-        interactAction = playerInput.actions["Interact"];
+        //--- InputActionを取得 ---
+        interactAction = playerInput.actions["Interact"]; // PlayerInputから「Interact」アクションを取得
+        inventoryAction = playerInput.actions["Inventory"]; // PlayerInputから「Inventory」アクションを取得
 
         //--- インタラクト処理 ---
+
         Observable.EveryUpdate()
-            .Where(_ => interactAction.triggered && CanInteract())
+            .Where(_ => interactAction.triggered && CanInteract() && !inventory.isShowInventoryUI)
             .Subscribe(_ => TryInteract())
+            .AddTo(this);
+
+        Observable.EveryUpdate()
+            .Where(_ => inventoryAction.triggered)
+            .Subscribe(_ => inventory.ShowInventoryUI())
             .AddTo(this);
 
         //--- UIの表示/非表示を分けて処理 ---
         Observable.EveryUpdate()
-            .Where(_ => CanInteract())
+            .Where(_ => CanInteract() && !inventory.isShowInventoryUI)
             .Subscribe(_ => ShowInteractUI(true))
             .AddTo(this);
 
         Observable.EveryUpdate()
-            .Where(_ => !CanInteract())
+            .Where(_ => !CanInteract() || inventory.isShowInventoryUI)
             .Subscribe(_ => ShowInteractUI(false))
             .AddTo(this);
-    }   
+    }
 
     /// <summary>
     /// ・プレイヤーがインタラクトできる範囲内にいるか確認する

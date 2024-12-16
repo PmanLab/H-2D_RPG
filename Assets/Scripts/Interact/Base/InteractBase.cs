@@ -31,6 +31,7 @@ public abstract class InteractBase : MonoBehaviour
     public PlayerController PlayerController => playerController;
     public GameObject DialogueWindow => dialogueWindow;
 
+
     /// <summary>
     /// ・インスペクターで指定した名前を
     /// メッセージウィンドウで表示
