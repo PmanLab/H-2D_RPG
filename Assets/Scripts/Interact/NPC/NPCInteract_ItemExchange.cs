@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UniRx;
+using UnityEngine.InputSystem;
 
 /// <summary>
 /// NPCインタラクト_アイテムトレード(InteractBase継承)
@@ -9,8 +10,8 @@ using UniRx;
 public class NPCInteract_ItemExchange : InteractBase
 {
     //=== シリアライズ ===
-    [SerializeField, Header("インタラクトUIを制御するPlayerInteract")] private PlayerInteract playerInteract;  // PlayerInteractを参照
     [SerializeField, Header("Inventoryをアタッチ")] private Inventory inventory;
+    [SerializeField, Header("PlayerInteractをアタッチ")] private PlayerInteract playerInteract;
 
     //=== 変数宣言 ===
     private int currentDialogueIndex = 0;  // 現在の会話のインデックス
@@ -51,7 +52,7 @@ public class NPCInteract_ItemExchange : InteractBase
 
         // 新しい購読を登録
         conversationSubscription = Observable.EveryUpdate()
-            .Where(_ => isConversationActive && !PlayerController.IsMoving && Input.GetKeyDown(KeyCode.Space))
+            .Where(_ => isConversationActive && !PlayerController.IsMoving && playerInteract.interactAction.triggered)
             .Subscribe(_ =>
             {
                 if (currentDialogueIndex < ConversationList.Count)

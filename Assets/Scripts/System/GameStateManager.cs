@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using UniRx;
 using System;
+using UnityEngine.InputSystem;
 
 public class GameStateManager : MonoBehaviour
 {
     //=== シリアライズ ===
     [SerializeField, Header("ポーズUI")] private GameObject pauseUI;
+    [SerializeField, Header("PlayerInputをアタッチ")] private PlayerInput playerInput;
 
     //=== インスタンス ===
     public static GameStateManager instance;    // インスタンス用
@@ -13,7 +15,7 @@ public class GameStateManager : MonoBehaviour
     //=== 変数宣言 ===
     private ReactiveProperty<bool> isInPause = new ReactiveProperty<bool>(false);   // ポーズ用フラグ
     private IDisposable pausedSubscription;
-
+    private InputAction pauseAction;    // "Pause"actionを保持する変数
 
     //=== メソッド ===
     /// <summary>
@@ -39,9 +41,12 @@ public class GameStateManager : MonoBehaviour
     /// </summary>
     private void Start()
     {
+        //--- InputActionを取得 ---
+        pauseAction = playerInput.actions["Pause"]; // PlayerInputから「Pause」アクションを取得
+
         // ESCキーが押されたときにポーズ状態をトグル（Dead状態以外）
         pausedSubscription = Observable.EveryUpdate()
-            .Where(_ => Input.GetKeyDown(KeyCode.Escape))
+            .Where(_ => pauseAction.triggered)
             .Where(_ => PlayerStateManager.instance.GetPlayerState() != PlayerStateManager.PlayerState.Dead) // Dead以外のときのみ処理
             .Subscribe(_ =>
             {

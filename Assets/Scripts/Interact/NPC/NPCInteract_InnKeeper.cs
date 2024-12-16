@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UniRx;
+using UnityEngine.InputSystem;
 
 /// <summary>
 /// NPCインタラクト_宿屋(InteractBase継承)
@@ -12,8 +13,8 @@ public class NPCInteract_InnKeeper : InteractBase
     [SerializeField, Header("宿屋の価格")] private int innPrice;
     [SerializeField, Header("宿屋の宿泊メッセージ")] private string innMessage;
 
-    [SerializeField, Header("インタラクトUIを制御するPlayerInteract")] private PlayerInteract playerInteract;
     [SerializeField, Header("Inventoryをアタッチ")] private Inventory inventory;
+    [SerializeField, Header("PlayerInteractをアタッチ")] private PlayerInteract playerInteract;
 
     //=== 変数宣言 ===
     private int currentDialogueIndex = 0;           // 現在の会話のインデックス
@@ -54,7 +55,7 @@ public class NPCInteract_InnKeeper : InteractBase
 
         // 新しい購読を登録
         conversationSubscription = Observable.EveryUpdate()
-            .Where(_ => isConversationActive && !PlayerController.IsMoving && Input.GetKeyDown(KeyCode.Space))
+            .Where(_ => isConversationActive && !PlayerController.IsMoving && playerInteract.interactAction.triggered)
             .Subscribe(_ =>
             {
                 if (currentDialogueIndex < ConversationList.Count)

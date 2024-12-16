@@ -3,6 +3,7 @@ using UnityEngine;
 using UniRx;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 /// <summary>
 /// NPCインタラクト_ショップ(InteractBase継承)
@@ -14,13 +15,13 @@ public class NPCInteract_ItemShop : InteractBase
     [SerializeField, Header("アイテム価格")] private int itemPrice;
     [SerializeField, Header("アイテムの購入確認メッセージ")] private string purchaseMessage;
 
-    [SerializeField, Header("インタラクトUIを制御するPlayerInteract")] private PlayerInteract playerInteract;  // PlayerInteractを参照
 
     [SerializeField, Header("購入可能アイテム")] private List<BaseItem> shopItems;
     [SerializeField, Header("プレイヤーのインベントリ")] private Inventory inventory;
 
     [SerializeField, Header("購入可能なアイテムリストを表示するUI")] private GameObject ItemListUI;
     [SerializeField, Header("購入可能なアイテムリストを表示するText")] private Text ItemListText;
+    [SerializeField, Header("PlayerInteractをアタッチ")] private PlayerInteract playerInteract;
 
 
     //=== 変数宣言 ===
@@ -67,7 +68,7 @@ public class NPCInteract_ItemShop : InteractBase
 
             // 新しい購読を登録
             conversationSubscription = Observable.EveryUpdate()
-                .Where(_ => isConversationActive && !PlayerController.IsMoving && Input.GetKeyDown(KeyCode.Space))
+                .Where(_ => isConversationActive && !PlayerController.IsMoving && playerInteract.interactAction.triggered)
                 .Subscribe(_ =>
                 {
                     if (currentDialogueIndex < ConversationList.Count)
