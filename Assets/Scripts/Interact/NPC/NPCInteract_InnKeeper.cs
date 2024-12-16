@@ -82,7 +82,7 @@ public class NPCInteract_InnKeeper : InteractBase
     private void DisplayInnConfirmation()
     {
         isConversationActive = true;
-        DisplayDialogue("宿泊しますか？ (Y: はい, N: いいえ)");
+        DisplayDialogue("宿泊しますか？ (B: はい, A: いいえ)");
 
         // 購読を使ってユーザーの入力を確認
         conversationSubscription?.Dispose(); // 以前の購読を解除
@@ -92,7 +92,7 @@ public class NPCInteract_InnKeeper : InteractBase
             .Where(_ => isConversationActive)
             .Subscribe(_ =>
             {
-                if (Input.GetKeyDown(KeyCode.Y)) // 「Y」が押された場合
+                if (playerInteract.YesAction.triggered)
                 {
                     if (PlayerStatusManager.CanAfford(innPrice))
                     {
@@ -115,7 +115,7 @@ public class NPCInteract_InnKeeper : InteractBase
                             .AddTo(this);
                     }
                 }
-                else if (Input.GetKeyDown(KeyCode.N))
+                else if (playerInteract.NoAction.triggered)
                 {
                     DisplayDialogue("宿泊をキャンセルしました");
 

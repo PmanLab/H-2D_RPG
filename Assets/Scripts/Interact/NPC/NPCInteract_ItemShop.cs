@@ -134,8 +134,18 @@ public class NPCInteract_ItemShop : InteractBase
                         TryPurchaseItem(shopItems[i]);
                         break;  // アイテムを選んだらループを終了
                     }
+                    else if(playerInteract.closeAction.triggered)
+                    {
+                        DisplayDialogue("またご利用ください！");
+                        // 2秒後に会話終了
+                        Observable.Timer(TimeSpan.FromSeconds(2))
+                            .Subscribe(_ => EndConversation())
+                            .AddTo(this);
+                    }
+                    
                 }
             }).AddTo(this);  // メモリリーク防止
+
     }
 
     private void TryPurchaseItem(BaseItem item)

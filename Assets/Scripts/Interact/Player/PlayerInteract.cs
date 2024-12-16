@@ -15,8 +15,11 @@ public class PlayerInteract : InteractBase
     [SerializeField, Header("Inventoryをアタッチ")] private Inventory inventory;
 
     //=== 変数宣言 ===
-    public InputAction interactAction { get; set; }  // "Interact"アクションを保持する変数
+    public InputAction interactAction { get; set; }     // "Interact"アクションを保持する変数
     public InputAction inventoryAction { get; set; }    // "Inventory"アクションを保持する変数
+    public InputAction closeAction { get; set; }        // "Close"アクションを保持する変数
+    public InputAction YesAction {  get; set; }         // "Yes"アクションを保持する変数
+    public InputAction NoAction {  get; set; }         // "No"アクションを保持する変数
 
     /// <summary>
     /// インタラクションメソッド
@@ -32,10 +35,11 @@ public class PlayerInteract : InteractBase
         //--- InputActionを取得 ---
         interactAction = playerInput.actions["Interact"]; // PlayerInputから「Interact」アクションを取得
         inventoryAction = playerInput.actions["Inventory"]; // PlayerInputから「Inventory」アクションを取得
-        
+        closeAction = playerInput.actions["Close"];         // PlayerInputから「Close」アクションを取得
+        YesAction = playerInput.actions["Yes"];             // PlayerInputから「Yes」アクションを取得
+        NoAction = playerInput.actions["No"];             // PlayerInputから「No」アクションを取得
 
         //--- インタラクト処理 ---
-
         Observable.EveryUpdate()
             .Where(_ => interactAction.triggered && CanInteract() && !inventory.isShowInventoryUI)
             .Subscribe(_ => TryInteract())
