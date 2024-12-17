@@ -25,7 +25,7 @@ public class NPCInteract_ItemShop : InteractBase
 
     //=== 変数宣言 ===
     private int currentDialogueIndex = 0;  // 現在の会話のインデックス
-    private bool isPurchaseConfirmationActive = false;
+    private bool isPurchaseConfirmationActive = false;  // 購入確認フラグ
     private IDisposable conversationSubscription; // 購読を管理する変数
 
 
@@ -135,6 +135,7 @@ public class NPCInteract_ItemShop : InteractBase
                     else if(playerInteract.closeAction.triggered)
                     {
                         DisplayDialogue("またご利用ください！");
+                        isPurchaseConfirmationActive =false;
                         // 2秒後に会話終了
                         Observable.Timer(TimeSpan.FromSeconds(2))
                             .Subscribe(_ => EndConversation())
@@ -160,6 +161,8 @@ public class NPCInteract_ItemShop : InteractBase
             {
                 DisplayDialogue("インベントリがいっぱいです！");
             }
+
+            isPurchaseConfirmationActive = false;
             // アイテム購入後、2秒後に会話終了
             Observable.Timer(TimeSpan.FromSeconds(2))
                 .Subscribe(_ => EndConversation())
@@ -170,6 +173,8 @@ public class NPCInteract_ItemShop : InteractBase
         {
             DisplayDialogue("お金が足りません！");
             Debug.Log("お金が足りません！");
+            isPurchaseConfirmationActive = false;
+
 
             // お金が足りない場合も2秒後に会話終了
             Observable.Timer(TimeSpan.FromSeconds(2))
@@ -227,7 +232,7 @@ public class NPCInteract_ItemShop : InteractBase
 
         conversationSubscription?.Dispose();    // 購読を解除
 
-        isPurchaseConfirmationActive = false;
+        isPurchaseConfirmationActive = false;   // 購入確認フラグ
     }
 }
 

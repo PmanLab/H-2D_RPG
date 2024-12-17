@@ -18,6 +18,7 @@ public class NPCInteract_InnKeeper : InteractBase
 
     //=== 変数宣言 ===
     private int currentDialogueIndex = 0;           // 現在の会話のインデックス
+    private bool isAccommodationConfirmationActive = false; // 宿泊確認フラグ
     private IDisposable conversationSubscription;   // 購読を管理する変数
 
     //=== メソッド ===
@@ -80,7 +81,7 @@ public class NPCInteract_InnKeeper : InteractBase
     /// </summary>
     private void DisplayInnConfirmation()
     {
-        //isConversationActive = true;
+        isAccommodationConfirmationActive = true;
         DisplayDialogue("宿泊しますか？ (B: はい, A: いいえ)");
 
         // 購読を使ってユーザーの入力を確認
@@ -88,7 +89,7 @@ public class NPCInteract_InnKeeper : InteractBase
 
         // 購読を登録
         conversationSubscription = Observable.EveryUpdate()
-            .Where(_ => PlayerStateManager.instance.GetConversation())
+            .Where(_ => PlayerStateManager.instance.GetConversation() && isAccommodationConfirmationActive)
             .Subscribe(_ =>
             {
                 if (playerInteract.YesAction.triggered)
@@ -98,6 +99,8 @@ public class NPCInteract_InnKeeper : InteractBase
                         PlayerStatusManager.SpendMoney(innPrice); // 宿泊代を支払う
                         PlayerStatusManager.MaxHeal(); // プレイヤーを回復
                         DisplayDialogue(innMessage); // 宿泊メッセージを表示
+                        
+                        isAccommodationConfirmationActive = false;
 
                         // メッセージ表示指定した待機時間後、会話終了
                         Observable.Timer(TimeSpan.FromSeconds(ConstantManager.interactWaitingTime))
@@ -107,7 +110,9 @@ public class NPCInteract_InnKeeper : InteractBase
                     else
                     {
                         DisplayDialogue("お金が足りません");
-
+                        
+                        isAccommodationConfirmationActive = false;
+                        
                         // メッセージ表示指定した待機時間後、会話終了
                         Observable.Timer(TimeSpan.FromSeconds(ConstantManager.interactWaitingTime))
                             .Subscribe(_ => EndConversation())
@@ -117,7 +122,7 @@ public class NPCInteract_InnKeeper : InteractBase
                 else if (playerInteract.NoAction.triggered)
                 {
                     DisplayDialogue("宿泊をキャンセルしました");
-
+                    isAccommodationConfirmationActive = false;
                     Observable.Timer(TimeSpan.FromSeconds(ConstantManager.interactWaitingTime)) // 2秒待機
                         .Subscribe(_ => EndConversation())
                         .AddTo(this);
@@ -149,6 +154,8 @@ public class NPCInteract_InnKeeper : InteractBase
         PlayerController.ResumeMovement();      // プレイヤーの移動を再開
 
         conversationSubscription?.Dispose();    // 購読を解除
+
+        isAccommodationConfirmationActive = false;  // 宿泊確認フラグ切り替え
     }
 
 
