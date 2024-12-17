@@ -18,7 +18,7 @@ public class PlayerStateManager : MonoBehaviour
     }
 
     //=== 変数宣言 ===
-    private ReactiveProperty<bool> bIsInConversation = new ReactiveProperty<bool>(false);   // 会話フラグ
+    private ReactiveProperty<bool> IsInConversation = new ReactiveProperty<bool>(false);    // 会話フラグ
     private ReactiveProperty<PlayerState> eCurrentPlayerState = new ReactiveProperty<PlayerState>(PlayerState.Idle); // プレイヤー状態
 
     //=== メソッド ===
@@ -46,7 +46,7 @@ public class PlayerStateManager : MonoBehaviour
     private void Start()
     {
         //--- 状態の変更を監視(各状態ごとの処理を設定) --- 
-        bIsInConversation.Subscribe(isTalking =>
+        IsInConversation.Subscribe(isTalking =>
         {
             if (isTalking)
             {// 会話開始時処理
@@ -90,7 +90,7 @@ public class PlayerStateManager : MonoBehaviour
     private void OnDestroy()
     {
         // ReactivePropertyを解放
-        bIsInConversation.Dispose();
+        IsInConversation.Dispose();
         eCurrentPlayerState.Dispose();
     }
 
@@ -100,7 +100,7 @@ public class PlayerStateManager : MonoBehaviour
     /// </summary>
     public void StartConversation()
     {
-        bIsInConversation.Value = true;
+        IsInConversation.Value = true;
     }
 
     /// <summary>
@@ -109,7 +109,16 @@ public class PlayerStateManager : MonoBehaviour
     /// </summary>
     public void EndConversation()
     {
-        bIsInConversation.Value = false;
+        IsInConversation.Value = false;
+    }
+
+    /// <summary>
+    /// ・現在の会話状態を返す
+    /// </summary>
+    /// <returns>会話状態を取得する</returns>
+    public bool GetConversation()
+    {
+        return IsInConversation.Value;
     }
 
     /// <summary>
@@ -122,6 +131,7 @@ public class PlayerStateManager : MonoBehaviour
     }
 
     /// <summary>
+    /// ・現在のプレイヤー状態を返す
     /// </summary>
     /// <returns>現在のプレイヤー状態を取得する</returns>
     public PlayerState GetPlayerState()

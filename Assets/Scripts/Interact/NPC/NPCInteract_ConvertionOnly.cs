@@ -15,12 +15,9 @@ public class NPCInteract_ConvertionOnly : InteractBase
 
     //=== 変数宣言 ===
     private int currentDialogueIndex = 0;  // 現在の会話のインデックス
-    private bool isConversationActive = false;
     private IDisposable conversationSubscription; // 購読を管理する変数
 
-
     //=== メソッド ===
-
     /// <summary>
     ///・ 継承したインタラクト処理内で
     /// 　このNPCが会話した時のメソッドを呼び出す
@@ -40,7 +37,7 @@ public class NPCInteract_ConvertionOnly : InteractBase
     {
         SetNpcName();               // NPCの名前をセット
         currentDialogueIndex = 0;   // セリフインデックスをリセット
-        isConversationActive = true;
+        PlayerStateManager.instance.StartConversation();
         inventory.isConvertionActive = true;
         inventory.ShowInventoryUI();
 
@@ -54,7 +51,7 @@ public class NPCInteract_ConvertionOnly : InteractBase
 
         // 新しい購読を登録
         conversationSubscription = Observable.EveryUpdate()
-            .Where(_ => isConversationActive && !PlayerController.IsMoving && playerInteract.interactAction.triggered)
+            .Where(_ => PlayerStateManager.instance.GetConversation() && !PlayerController.IsMoving && playerInteract.interactAction.triggered)
             .Subscribe(_ =>
             {
                 if (currentDialogueIndex < ConversationList.Count)
@@ -88,7 +85,7 @@ public class NPCInteract_ConvertionOnly : InteractBase
     private void EndConversation()
     {
         Debug.Log("会話を終了しました・.");
-        isConversationActive = false;
+        PlayerStateManager.instance.EndConversation();
         inventory.isConvertionActive = false;
         ShowDialogueWindow(false);              // 会話ウィンドウを非表示
         ShowInteractUI(true);    // インタラクトUIを再表示

@@ -881,6 +881,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pauseUI: {fileID: 79364573}
   playerInput: {fileID: 1915051090}
+  inventory: {fileID: 1915051093}
 --- !u!1 &624172540
 GameObject:
   m_ObjectHideFlags: 0
@@ -3881,6 +3882,6 @@ SceneRoots:
   - {fileID: 985487875}
   - {fileID: 1259092146}
   - {fileID: 351147884}
-  - {fileID: 491959124}
   - {fileID: 2059655201}
   - {fileID: 1945929172}
+  - {fileID: 491959124}

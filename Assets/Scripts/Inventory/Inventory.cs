@@ -112,7 +112,7 @@ public class Inventory : MonoBehaviour
     public void ShowInventoryUI()
     {
         //--- 会話検知処理 ---
-        if (!isConvertionActive)
+        if (!isConvertionActive && !GameStateManager.instance.GetPaused())
         {
             //--- インベントリ表示非表示処理 ---
             if (!isShowInventoryUI)
@@ -129,9 +129,14 @@ public class Inventory : MonoBehaviour
                 Time.timeScale = 1.0f;
             }
         }
-        else
+        else if(isConvertionActive)
         {
             Time.timeScale = 1.0f;
+            inventoryUI.SetActive(false);
+            isShowInventoryUI = false;
+        }
+        else if(GameStateManager.instance.GetPaused())
+        {
             inventoryUI.SetActive(false);
             isShowInventoryUI = false;
         }

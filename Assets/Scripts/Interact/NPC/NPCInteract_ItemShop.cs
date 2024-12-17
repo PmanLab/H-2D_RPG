@@ -3,7 +3,6 @@ using UnityEngine;
 using UniRx;
 using System.Collections.Generic;
 using UnityEngine.UI;
-using UnityEngine.InputSystem;
 
 /// <summary>
 /// NPCインタラクト_ショップ(InteractBase継承)
@@ -26,7 +25,6 @@ public class NPCInteract_ItemShop : InteractBase
 
     //=== 変数宣言 ===
     private int currentDialogueIndex = 0;  // 現在の会話のインデックス
-    private bool isConversationActive = false;
     private bool isPurchaseConfirmationActive = false;
     private IDisposable conversationSubscription; // 購読を管理する変数
 
@@ -50,11 +48,11 @@ public class NPCInteract_ItemShop : InteractBase
     private void StartConversation()
     {
         // 会話がすでに進行中であればインデックスをリセットしない
-        if (!isConversationActive)
+        if (!PlayerStateManager.instance.GetConversation())
         {
             SetNpcName();               // NPCの名前をセット
             currentDialogueIndex = 0;  // セリフインデックスをリセット
-            isConversationActive = true;
+            PlayerStateManager.instance.StartConversation();
             inventory.isConvertionActive = true;
             inventory.ShowInventoryUI();
 
@@ -68,7 +66,7 @@ public class NPCInteract_ItemShop : InteractBase
 
             // 新しい購読を登録
             conversationSubscription = Observable.EveryUpdate()
-                .Where(_ => isConversationActive && !PlayerController.IsMoving && playerInteract.interactAction.triggered)
+                .Where(_ => PlayerStateManager.instance.GetConversation() && !PlayerController.IsMoving && playerInteract.interactAction.triggered)
                 .Subscribe(_ =>
                 {
                     if (currentDialogueIndex < ConversationList.Count)
@@ -220,7 +218,7 @@ public class NPCInteract_ItemShop : InteractBase
     private void EndConversation()
     {
         Debug.Log("会話を終了しました・・・");
-        isConversationActive = false;
+        PlayerStateManager.instance.EndConversation();
         inventory.isConvertionActive = false;
         ShowDialogueWindow(false);              // 会話ウィンドウを非表示
         ShowItemListDialogueWindow(false);      // アイテムリストウィンドウを非表示

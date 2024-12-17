@@ -8,6 +8,7 @@ public class GameStateManager : MonoBehaviour
     //=== シリアライズ ===
     [SerializeField, Header("ポーズUI")] private GameObject pauseUI;
     [SerializeField, Header("PlayerInputをアタッチ")] private PlayerInput playerInput;
+    [SerializeField, Header("Inventoryをアタッチ")] private Inventory inventory;
 
     //=== インスタンス ===
     public static GameStateManager instance;    // インスタンス用
@@ -47,6 +48,7 @@ public class GameStateManager : MonoBehaviour
         // ESCキーが押されたときにポーズ状態をトグル（Dead状態以外）
         pausedSubscription = Observable.EveryUpdate()
             .Where(_ => pauseAction.triggered)
+            .Where(_ => !PlayerStateManager.instance.GetConversation() && !inventory.isShowInventoryUI) // 非会話状態のみ処理
             .Where(_ => PlayerStateManager.instance.GetPlayerState() != PlayerStateManager.PlayerState.Dead) // Dead以外のときのみ処理
             .Subscribe(_ =>
             {
@@ -97,5 +99,14 @@ public class GameStateManager : MonoBehaviour
     public void EndPaused()
     {
         isInPause.Value = false;
+    }
+
+    /// <summary>
+    /// ・現在ポーズ状態中かどうかを返す
+    /// </summary>
+    /// <returns>現在のポーズ状態を取得</returns>
+    public bool GetPaused()
+    {
+        return  isInPause.Value;
     }
 }
