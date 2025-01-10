@@ -17,9 +17,9 @@ public class NPCInteract_ItemShop : InteractBase
 
     [SerializeField, Header("購入可能アイテム")] private List<BaseItem> shopItems;
     [SerializeField, Header("プレイヤーのインベントリ")] private Inventory inventory;
-
     [SerializeField, Header("購入可能なアイテムリストを表示するUI")] private GameObject ItemListUI;
     [SerializeField, Header("購入可能なアイテムリストを表示するText")] private Text ItemListText;
+    [SerializeField, Header("購入選択ボタンUI")] private GameObject indexButtonUI;
     [SerializeField, Header("PlayerInteractをアタッチ")] private PlayerInteract playerInteract;
 
 
@@ -113,11 +113,12 @@ public class NPCInteract_ItemShop : InteractBase
         {
             dialogue += $"{i + 1}. {shopItems[i].itemName} - {shopItems[i].price}G \n ({shopItems[i].description}) \n\n";  // 価格も表示
         }
-        DisplayDialogue("番号を選んでください。");
+        DisplayDialogue("商品を選んでください。");
         DisplayItemList(dialogue);
 
+
         // 購読を使ってユーザーの入力を確認
-        conversationSubscription?.Dispose();  // 以前の購読を解除
+        /*conversationSubscription?.Dispose();  // 以前の購読を解除
 
         // 購読を登録
         conversationSubscription = Observable.EveryUpdate()
@@ -129,33 +130,33 @@ public class NPCInteract_ItemShop : InteractBase
                 {
                     if (Input.GetKeyDown(KeyCode.Alpha1 + i))
                     {
-                        TryPurchaseItem(shopItems[i]);
+                        TryPurchaseItem(i);
                         break;  // アイテムを選んだらループを終了
                     }
-                    else if(playerInteract.closeAction.triggered)
+                    else if (playerInteract.closeAction.triggered)
                     {
                         DisplayDialogue("またご利用ください！");
-                        isPurchaseConfirmationActive =false;
+                        isPurchaseConfirmationActive = false;
                         // 2秒後に会話終了
                         Observable.Timer(TimeSpan.FromSeconds(2))
                             .Subscribe(_ => EndConversation())
                             .AddTo(this);
                     }
-                    
+
                 }
             }).AddTo(this);  // メモリリーク防止
-
+        */
     }
 
-    private void TryPurchaseItem(BaseItem item)
+    public void TryPurchaseItem(int ListIndex)
     {
-        if (PlayerStatusManager.CanAfford(item.price))
+        if (PlayerStatusManager.CanAfford(shopItems[ListIndex].price))
         {
-            if (inventory.AddItem(item))
+            if (inventory.AddItem(shopItems[ListIndex]))
             {
-                PlayerStatusManager.SpendMoney(item.price);
+                PlayerStatusManager.SpendMoney(shopItems[ListIndex].price);
                 Debug.Log("アイテムを購入しました！");
-                DisplayDialogue("アイテムを購入しました！");
+                DisplayDialogue("アイテムを購入しました！またご利用ください！");
             }
             else
             {
@@ -191,8 +192,8 @@ public class NPCInteract_ItemShop : InteractBase
     /// <param name="dialogue">表示するセリフ</param>
     private void DisplayDialogue(string dialogue)
     {
-        ShowDialogueWindow(true);       
-        DialogueText.text = dialogue;   
+        ShowDialogueWindow(true);
+        DialogueText.text = dialogue;
     }
 
     /// <summary>
@@ -215,6 +216,30 @@ public class NPCInteract_ItemShop : InteractBase
     {
         ItemListUI.SetActive(isVisible);                         // ウィンドウの表示/非表示を設定
         ItemListText.gameObject.SetActive(isVisible);            // テキストの表示/非表示を設定
+        indexButtonUI.gameObject.SetActive(isVisible);           // インデックスボタンの表示/非表示を設定
+    }
+
+    /// <summary>
+    /// ・購入ボタンを非表示にする
+    /// </summary>
+    public void IndexCloseButton()
+    {
+        indexButtonUI.gameObject.SetActive(false);              // インデックスボタンを非表示に設定
+    }
+
+    /// <summary>
+    /// ・ショップを閉じる
+    /// </summary>
+    public void ShopCloseButton()
+    {
+        DisplayDialogue("またご利用ください！");
+        isPurchaseConfirmationActive = false;
+        // 2秒後に会話終了
+        Observable.Timer(TimeSpan.FromSeconds(2))
+            .Subscribe(_ => EndConversation())
+            .AddTo(this);
+        indexButtonUI.gameObject.SetActive(false);             // インデックスボタンを非表示に設定
+
     }
 
     /// <summary>
