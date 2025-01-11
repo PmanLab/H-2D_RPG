@@ -5,7 +5,8 @@ using System.Collections.Generic;
 public class ButtonManager : MonoBehaviour
 {
     //=== シリアライズ ===
-    [SerializeField, Header("NPCInteract_ItemShop(対応させる店員)をアタッチ")] NPCInteract_ItemShop npcInteract_ItemShop;
+    [SerializeField, Header("NPCInteract_ItemShop(対応させるNPC)をアタッチ")] NPCInteract_ItemShop npcInteract_ItemShop;
+    [SerializeField, Header("NPCInteract_InnKeeper(対応させるNPC)をアタッチ")] NPCInteract_InnKeeper npcInteract_InnKeeper;
     [SerializeField, Header("リスト選択番号を入力")] private int currentIndexNumber = 0;
 
     //=== メソッド ===
@@ -64,14 +65,32 @@ public class ButtonManager : MonoBehaviour
     public void BuyShopButton()
     {
          npcInteract_ItemShop.TryPurchaseItem(currentIndexNumber);
-         npcInteract_ItemShop.IndexCloseButton();
+         npcInteract_ItemShop.IndexButtonClose();
     }
     
     /// <summary>
-    /// ・指定した
+    /// ・購入ボタンを非表示にする
     /// </summary>
     public void CancelShopButton()
     {
         npcInteract_ItemShop.ShopCloseButton();
+    }
+
+    /// <summary>
+    /// ・宿に泊まる事を承認し、宿泊の処理を行う
+    /// </summary>
+    public void InnApplyButton()
+    {
+        npcInteract_InnKeeper.ApplyInn();
+    }
+
+
+    /// <summary>
+    /// ・宿に泊まることを拒否し、承認ボタンを非表示にする
+    /// </summary>
+    public void UnnApplyButton()
+    {
+        npcInteract_InnKeeper.ApplyCloseButton();
+        npcInteract_InnKeeper.UnnApplyInn();
     }
 }

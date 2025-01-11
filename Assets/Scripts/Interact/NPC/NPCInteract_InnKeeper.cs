@@ -2,6 +2,8 @@
 using UnityEngine;
 using UniRx;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 /// <summary>
 /// NPCインタラクト_宿屋(InteractBase継承)
@@ -15,6 +17,8 @@ public class NPCInteract_InnKeeper : InteractBase
 
     [SerializeField, Header("Inventoryをアタッチ")] private Inventory inventory;
     [SerializeField, Header("PlayerInteractをアタッチ")] private PlayerInteract playerInteract;
+    [SerializeField, Header("宿泊承認ボタンUI")] private GameObject applyButtonUI;
+    [SerializeField, Header("最初に選択状態にするボタンをアタッチ")] private GameObject firstApplyButton;
 
     //=== 変数宣言 ===
     private int currentDialogueIndex = 0;           // 現在の会話のインデックス
@@ -55,7 +59,9 @@ public class NPCInteract_InnKeeper : InteractBase
 
         // 新しい購読を登録
         conversationSubscription = Observable.EveryUpdate()
-            .Where(_ => PlayerStateManager.instance.GetConversation() && !PlayerController.IsMoving && playerInteract.interactAction.triggered)
+            .Where(_ => PlayerStateManager.instance.GetConversation() && 
+                        !PlayerController.IsMoving && 
+                        playerInteract.interactAction.triggered)
             .Subscribe(_ =>
             {
                 if (currentDialogueIndex < ConversationList.Count)
@@ -82,8 +88,11 @@ public class NPCInteract_InnKeeper : InteractBase
     private void DisplayInnConfirmation()
     {
         isAccommodationConfirmationActive = true;
-        DisplayDialogue("宿泊しますか？ (B: はい, A: いいえ)");
+        DisplayDialogue("宿泊しますか？");
+        ShowButton(true);   // 宿泊をするかの確認ボタンを表示
 
+
+        /*
         // 購読を使ってユーザーの入力を確認
         conversationSubscription?.Dispose(); // 以前の購読を解除
 
@@ -92,6 +101,7 @@ public class NPCInteract_InnKeeper : InteractBase
             .Where(_ => PlayerStateManager.instance.GetConversation() && isAccommodationConfirmationActive)
             .Subscribe(_ =>
             {
+                // もしYesActionを受け取ったら
                 if (playerInteract.YesAction.triggered)
                 {
                     if (PlayerStatusManager.CanAfford(innPrice))
@@ -99,7 +109,7 @@ public class NPCInteract_InnKeeper : InteractBase
                         PlayerStatusManager.SpendMoney(innPrice); // 宿泊代を支払う
                         PlayerStatusManager.MaxHeal(); // プレイヤーを回復
                         DisplayDialogue(innMessage); // 宿泊メッセージを表示
-                        
+
                         isAccommodationConfirmationActive = false;
 
                         // メッセージ表示指定した待機時間後、会話終了
@@ -110,9 +120,9 @@ public class NPCInteract_InnKeeper : InteractBase
                     else
                     {
                         DisplayDialogue("お金が足りません");
-                        
+
                         isAccommodationConfirmationActive = false;
-                        
+
                         // メッセージ表示指定した待機時間後、会話終了
                         Observable.Timer(TimeSpan.FromSeconds(ConstantManager.interactWaitingTime))
                             .Subscribe(_ => EndConversation())
@@ -128,6 +138,54 @@ public class NPCInteract_InnKeeper : InteractBase
                         .AddTo(this);
                 }
             }).AddTo(this); // メモリリーク防止
+        */
+    }
+
+
+    /// <summary>
+    /// ・宿泊を承認した際の処理
+    /// </summary>
+    public void ApplyInn()
+    {
+        if (PlayerStateManager.instance.GetConversation() && isAccommodationConfirmationActive)
+        {// 会話中で非宿泊状態の場合処理を通す
+            if (PlayerStatusManager.CanAfford(innPrice))
+            {// お金が足りた場合に処理を通す
+                PlayerStatusManager.SpendMoney(innPrice); // 宿泊代を支払う
+                PlayerStatusManager.MaxHeal(); // プレイヤーを回復
+                DisplayDialogue(innMessage); // 宿泊メッセージを表示
+
+                isAccommodationConfirmationActive = false;
+
+                // メッセージ表示指定した待機時間後、会話終了
+                Observable.Timer(TimeSpan.FromSeconds(ConstantManager.interactWaitingTime))
+                    .Subscribe(_ => EndConversation())
+                    .AddTo(this);
+            }
+            else
+            {// お金が足りない場合に処理を通す
+                DisplayDialogue("お金が足りません");
+
+                isAccommodationConfirmationActive = false;
+
+                // メッセージ表示指定した待機時間後、会話終了
+                Observable.Timer(TimeSpan.FromSeconds(ConstantManager.interactWaitingTime))
+                    .Subscribe(_ => EndConversation())
+                    .AddTo(this);
+            }
+        }
+    }
+
+    /// <summary>
+    /// ・宿泊を拒否した場合の処理
+    /// </summary>
+    public void UnnApplyInn()
+    {
+        DisplayDialogue("宿泊をキャンセルしました");
+        isAccommodationConfirmationActive = false;
+        Observable.Timer(TimeSpan.FromSeconds(ConstantManager.interactWaitingTime)) // 2秒待機
+            .Subscribe(_ => EndConversation())
+            .AddTo(this);
     }
 
     /// <summary>
@@ -142,6 +200,24 @@ public class NPCInteract_InnKeeper : InteractBase
     }
 
     /// <summary>
+    /// ・宿屋宿泊承認確認ボタンのの表示・非表示を切り替える処理
+    /// </summary>
+    /// <param name="isVisible">メッセージウィンドウの有効・無効</param>
+    private void ShowButton(bool isVisible)
+    {
+        applyButtonUI.gameObject.SetActive(isVisible);
+        EventSystem.current.SetSelectedGameObject(firstApplyButton); // 最初に選択状態にするボタンを割り当て
+    }
+
+    /// <summary>
+    /// ・承認確認ボタンを非表示にする
+    /// </summary>
+    public void ApplyCloseButton()
+    {
+        applyButtonUI.gameObject.SetActive(false);      // 承認確認ボタンを非表示に設定
+    }
+
+    /// <summary>
     /// ・会話が終了した際にUIを非表示にする
     /// </summary>
     private void EndConversation()
@@ -149,11 +225,12 @@ public class NPCInteract_InnKeeper : InteractBase
         Debug.Log("会話を終了しました・.");
         PlayerStateManager.instance.EndConversation();
         inventory.isConvertionActive = false;
-        ShowDialogueWindow(false);              // 会話ウィンドウを非表示
-        ShowInteractUI(true);    // インタラクトUIを再表示
-        PlayerController.ResumeMovement();      // プレイヤーの移動を再開
+        ShowDialogueWindow(false);                  // 会話ウィンドウを非表示
+        ShowButton(false);                          // 宿泊承認確認ボタンを非表示
+        ShowInteractUI(true);                       // インタラクトUIを再表示
+        PlayerController.ResumeMovement();          // プレイヤーの移動を再開
 
-        conversationSubscription?.Dispose();    // 購読を解除
+        conversationSubscription?.Dispose();        // 購読を解除
 
         isAccommodationConfirmationActive = false;  // 宿泊確認フラグ切り替え
     }

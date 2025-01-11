@@ -36,8 +36,6 @@ public class PlayerInteract : InteractBase
         interactAction = playerInput.actions["Interact"]; // PlayerInputから「Interact」アクションを取得
         inventoryAction = playerInput.actions["Inventory"]; // PlayerInputから「Inventory」アクションを取得
         closeAction = playerInput.actions["Close"];         // PlayerInputから「Close」アクションを取得
-        YesAction = playerInput.actions["Yes"];             // PlayerInputから「Yes」アクションを取得
-        NoAction = playerInput.actions["No"];             // PlayerInputから「No」アクションを取得
 
         //--- インタラクト処理 ---
         Observable.EveryUpdate()

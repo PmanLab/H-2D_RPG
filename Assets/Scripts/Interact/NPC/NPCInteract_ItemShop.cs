@@ -3,6 +3,7 @@ using UnityEngine;
 using UniRx;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 /// <summary>
 /// NPCインタラクト_ショップ(InteractBase継承)
@@ -20,6 +21,7 @@ public class NPCInteract_ItemShop : InteractBase
     [SerializeField, Header("購入可能なアイテムリストを表示するUI")] private GameObject ItemListUI;
     [SerializeField, Header("購入可能なアイテムリストを表示するText")] private Text ItemListText;
     [SerializeField, Header("購入選択ボタンUI")] private GameObject indexButtonUI;
+    [SerializeField, Header("最初に選択状態にするボタンをアタッチ")] private GameObject firstIndexButton;
     [SerializeField, Header("PlayerInteractをアタッチ")] private PlayerInteract playerInteract;
 
 
@@ -66,7 +68,8 @@ public class NPCInteract_ItemShop : InteractBase
 
             // 新しい購読を登録
             conversationSubscription = Observable.EveryUpdate()
-                .Where(_ => PlayerStateManager.instance.GetConversation() && !PlayerController.IsMoving && playerInteract.interactAction.triggered)
+                .Where(_ => PlayerStateManager.instance.GetConversation() && 
+                !PlayerController.IsMoving && playerInteract.interactAction.triggered)
                 .Subscribe(_ =>
                 {
                     if (currentDialogueIndex < ConversationList.Count)
@@ -184,7 +187,6 @@ public class NPCInteract_ItemShop : InteractBase
         }
     }
 
-
     /// <summary>
     /// ・会話を表示するメソッド
     /// ・会話ウィンドウとテキストを表示
@@ -214,15 +216,16 @@ public class NPCInteract_ItemShop : InteractBase
     /// <param name="isVisible">メッセージウィンドウの有効・無効</param>
     public virtual void ShowItemListDialogueWindow(bool isVisible)
     {
-        ItemListUI.SetActive(isVisible);                         // ウィンドウの表示/非表示を設定
-        ItemListText.gameObject.SetActive(isVisible);            // テキストの表示/非表示を設定
-        indexButtonUI.gameObject.SetActive(isVisible);           // インデックスボタンの表示/非表示を設定
+        ItemListUI.SetActive(isVisible);                                // ウィンドウの表示/非表示を設定
+        ItemListText.gameObject.SetActive(isVisible);                   // テキストの表示/非表示を設定
+        indexButtonUI.gameObject.SetActive(isVisible);                  // インデックスボタンの表示/非表示を設定
+        EventSystem.current.SetSelectedGameObject(firstIndexButton);    // 最初に選択状態にするボタンを割り当て
     }
 
     /// <summary>
     /// ・購入ボタンを非表示にする
     /// </summary>
-    public void IndexCloseButton()
+    public void IndexButtonClose()
     {
         indexButtonUI.gameObject.SetActive(false);              // インデックスボタンを非表示に設定
     }
@@ -233,13 +236,11 @@ public class NPCInteract_ItemShop : InteractBase
     public void ShopCloseButton()
     {
         DisplayDialogue("またご利用ください！");
-        isPurchaseConfirmationActive = false;
         // 2秒後に会話終了
         Observable.Timer(TimeSpan.FromSeconds(2))
             .Subscribe(_ => EndConversation())
             .AddTo(this);
         indexButtonUI.gameObject.SetActive(false);             // インデックスボタンを非表示に設定
-
     }
 
     /// <summary>
@@ -258,6 +259,11 @@ public class NPCInteract_ItemShop : InteractBase
         conversationSubscription?.Dispose();    // 購読を解除
 
         isPurchaseConfirmationActive = false;   // 購入確認フラグ
+    }
+
+    private void Update()
+    {
+        Debug.Log("現在の会話状況" + inventory.isConvertionActive);
     }
 }
 
