@@ -36,7 +36,7 @@ public class NPCInteract_ItemShop : InteractBase
     ///・ 継承したインタラクト処理内で
     /// 　このNPCが会話した時のメソッドを呼び出す
     /// </summary>
-    public override void Interact()
+    public override void InteractProcess()
     {
         // 会話を表示
         StartConversation();
@@ -55,7 +55,6 @@ public class NPCInteract_ItemShop : InteractBase
             SetNpcName();               // NPCの名前をセット
             currentDialogueIndex = 0;  // セリフインデックスをリセット
             PlayerStateManager.instance.StartConversation();
-            inventory.isConvertionActive = true;
             inventory.ShowInventoryUI();
 
             PlayerController.StopMovement();    // 会話中はプレイヤーの移動を停止
@@ -69,7 +68,9 @@ public class NPCInteract_ItemShop : InteractBase
             // 新しい購読を登録
             conversationSubscription = Observable.EveryUpdate()
                 .Where(_ => PlayerStateManager.instance.GetConversation() && 
-                !PlayerController.IsMoving && playerInteract.interactAction.triggered)
+                            !PlayerStateManager.instance.GetChoice() &&
+                            !PlayerController.IsMoving && 
+                            playerInteract.interactAction.triggered)
                 .Subscribe(_ =>
                 {
                     if (currentDialogueIndex < ConversationList.Count)
@@ -118,37 +119,6 @@ public class NPCInteract_ItemShop : InteractBase
         }
         DisplayDialogue("商品を選んでください。");
         DisplayItemList(dialogue);
-
-
-        // 購読を使ってユーザーの入力を確認
-        /*conversationSubscription?.Dispose();  // 以前の購読を解除
-
-        // 購読を登録
-        conversationSubscription = Observable.EveryUpdate()
-            .Where(_ => isPurchaseConfirmationActive)
-            .Subscribe(_ =>
-            {
-                // 数字キーの入力を動的に処理
-                for (int i = 0; i < shopItems.Count; i++)
-                {
-                    if (Input.GetKeyDown(KeyCode.Alpha1 + i))
-                    {
-                        TryPurchaseItem(i);
-                        break;  // アイテムを選んだらループを終了
-                    }
-                    else if (playerInteract.closeAction.triggered)
-                    {
-                        DisplayDialogue("またご利用ください！");
-                        isPurchaseConfirmationActive = false;
-                        // 2秒後に会話終了
-                        Observable.Timer(TimeSpan.FromSeconds(2))
-                            .Subscribe(_ => EndConversation())
-                            .AddTo(this);
-                    }
-
-                }
-            }).AddTo(this);  // メモリリーク防止
-        */
     }
 
     public void TryPurchaseItem(int ListIndex)
@@ -205,6 +175,7 @@ public class NPCInteract_ItemShop : InteractBase
     /// <param name="dialougue">表示するアイテムテキスト</param>
     private void DisplayItemList(string dialougue)
     {
+        PlayerStateManager.instance.StartChoice();
         ShowItemListDialogueWindow(true);
         ItemListText.text = dialougue;
 
@@ -250,7 +221,7 @@ public class NPCInteract_ItemShop : InteractBase
     {
         Debug.Log("会話を終了しました・・・");
         PlayerStateManager.instance.EndConversation();
-        inventory.isConvertionActive = false;
+        PlayerStateManager.instance.EndChoice();
         ShowDialogueWindow(false);              // 会話ウィンドウを非表示
         ShowItemListDialogueWindow(false);      // アイテムリストウィンドウを非表示
         ShowInteractUI(true);                   // インタラクトUIを再表示
@@ -259,11 +230,6 @@ public class NPCInteract_ItemShop : InteractBase
         conversationSubscription?.Dispose();    // 購読を解除
 
         isPurchaseConfirmationActive = false;   // 購入確認フラグ
-    }
-
-    private void Update()
-    {
-        Debug.Log("現在の会話状況" + inventory.isConvertionActive);
     }
 }
 

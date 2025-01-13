@@ -19,6 +19,7 @@ public class PlayerStateManager : MonoBehaviour
 
     //=== 変数宣言 ===
     private ReactiveProperty<bool> IsInConversation = new ReactiveProperty<bool>(false);    // 会話フラグ
+    private ReactiveProperty<bool> IsChoice = new ReactiveProperty<bool>(false);    // 選択肢フラグ
     private ReactiveProperty<PlayerState> eCurrentPlayerState = new ReactiveProperty<PlayerState>(PlayerState.Idle); // プレイヤー状態
 
     //=== メソッド ===
@@ -91,6 +92,7 @@ public class PlayerStateManager : MonoBehaviour
     {
         // ReactivePropertyを解放
         IsInConversation.Dispose();
+        IsChoice.Dispose();
         eCurrentPlayerState.Dispose();
     }
 
@@ -119,6 +121,31 @@ public class PlayerStateManager : MonoBehaviour
     public bool GetConversation()
     {
         return IsInConversation.Value;
+    }
+
+    /// <summary>
+    /// ・選択肢状態をONにする
+    /// </summary>
+    public void StartChoice()
+    {
+        IsChoice.Value = true;
+    }
+
+    /// <summary>
+    /// ・選択肢状態をOFFにする
+    /// </summary>
+    public void EndChoice()
+    {
+        IsChoice.Value = false;
+    }
+
+    /// <summary>
+    /// ・現在の選択肢状態を返す
+    /// </summary>
+    /// <returns>選択状態を取得する</returns>
+    public bool GetChoice()
+    { 
+        return IsChoice.Value;
     }
 
     /// <summary>

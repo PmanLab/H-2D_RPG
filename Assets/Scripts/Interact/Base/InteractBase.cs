@@ -34,7 +34,7 @@ public abstract class InteractBase : MonoBehaviour
 
     /// <summary>
     /// ・インスペクターで指定した名前を
-    /// メッセージウィンドウで表示
+    /// 　メッセージウィンドウで表示
     /// </summary>
     public virtual void SetNpcName() => nameDisplayText.text = interactableName;
 
@@ -46,10 +46,21 @@ public abstract class InteractBase : MonoBehaviour
     public virtual void ShowInteractUI(bool isVisible) => interactUI.SetActive(isVisible);
 
     /// <summary>
+    /// ・非会話状態時にインタラクト処理を行う
+    /// </summary>
+    public void Interact()
+    {
+        Debug.Log("いんたらくと処理が承認されました");
+        if (PlayerStateManager.instance.GetConversation() && 
+            PlayerStateManager.instance.GetChoice()) { return; }
+        InteractProcess();
+    }
+
+    /// <summary>
     /// ・仮想関数
     /// └ 継承クラスで処理を書く
     /// </summary>
-    public abstract void Interact();
+    public abstract void InteractProcess();
 
     /// <summary>
     /// ・会話ウィンドウの表示・非表示を切り替える処理

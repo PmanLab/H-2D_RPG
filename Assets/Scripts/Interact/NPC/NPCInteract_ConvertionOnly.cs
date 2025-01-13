@@ -22,7 +22,7 @@ public class NPCInteract_ConvertionOnly : InteractBase
     ///・ 継承したインタラクト処理内で
     /// 　このNPCが会話した時のメソッドを呼び出す
     /// </summary>
-    public override void Interact()
+    public override void InteractProcess()
     {
         // 会話を表示
         StartConversation();
@@ -38,7 +38,6 @@ public class NPCInteract_ConvertionOnly : InteractBase
         SetNpcName();               // NPCの名前をセット
         currentDialogueIndex = 0;   // セリフインデックスをリセット
         PlayerStateManager.instance.StartConversation();
-        inventory.isConvertionActive = true;
         inventory.ShowInventoryUI();
 
         PlayerController.StopMovement();    // 会話中はプレイヤーの移動を停止
@@ -86,7 +85,6 @@ public class NPCInteract_ConvertionOnly : InteractBase
     {
         Debug.Log("会話を終了しました・.");
         PlayerStateManager.instance.EndConversation();
-        inventory.isConvertionActive = false;
         ShowDialogueWindow(false);              // 会話ウィンドウを非表示
         ShowInteractUI(true);    // インタラクトUIを再表示
         PlayerController.ResumeMovement();      // プレイヤーの移動を再開

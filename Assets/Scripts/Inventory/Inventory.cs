@@ -17,7 +17,6 @@ public class Inventory : MonoBehaviour
     //=== 変数宣言 ===
     private List<BaseItem> items = new List<BaseItem>(); // 所持アイテムリスト
     public bool isShowInventoryUI { get; set; } = false;
-    public bool isConvertionActive { get; set; } = false;  // 会話検知用フラグ
 
     /// <summary>
     /// インベントリにアイテムを追加する
@@ -112,7 +111,7 @@ public class Inventory : MonoBehaviour
     public void ShowInventoryUI()
     {
         //--- 会話検知処理 ---
-        if (!isConvertionActive && !GameStateManager.instance.GetPaused())
+        if (!PlayerStateManager.instance.GetConversation() && !GameStateManager.instance.GetPaused())
         {
             //--- インベントリ表示非表示処理 ---
             if (!isShowInventoryUI)
@@ -129,7 +128,7 @@ public class Inventory : MonoBehaviour
                 Time.timeScale = 1.0f;
             }
         }
-        else if(isConvertionActive)
+        else if(PlayerStateManager.instance.GetConversation())
         {
             Time.timeScale = 1.0f;
             inventoryUI.SetActive(false);

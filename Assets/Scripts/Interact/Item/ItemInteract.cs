@@ -15,7 +15,7 @@ public class ItemInteract : InteractBase
     /// <summary>
     /// ・宝箱を開ける時の処理
     /// </summary>
-    public override void Interact()
+    public override void InteractProcess()
     {
         if(isLocked)
         {

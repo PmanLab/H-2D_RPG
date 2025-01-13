@@ -17,14 +17,11 @@ public class PlayerInteract : InteractBase
     //=== 変数宣言 ===
     public InputAction interactAction { get; set; }     // "Interact"アクションを保持する変数
     public InputAction inventoryAction { get; set; }    // "Inventory"アクションを保持する変数
-    public InputAction closeAction { get; set; }        // "Close"アクションを保持する変数
-    public InputAction YesAction {  get; set; }         // "Yes"アクションを保持する変数
-    public InputAction NoAction {  get; set; }         // "No"アクションを保持する変数
 
     /// <summary>
     /// インタラクションメソッド
     /// </summary>
-    public override void Interact(){}
+    public override void InteractProcess(){}
 
     /// <summary>
     /// ・PlayerInputからインタラクトアクションを取得し、
@@ -35,7 +32,6 @@ public class PlayerInteract : InteractBase
         //--- InputActionを取得 ---
         interactAction = playerInput.actions["Interact"]; // PlayerInputから「Interact」アクションを取得
         inventoryAction = playerInput.actions["Inventory"]; // PlayerInputから「Inventory」アクションを取得
-        closeAction = playerInput.actions["Close"];         // PlayerInputから「Close」アクションを取得
 
         //--- インタラクト処理 ---
         Observable.EveryUpdate()

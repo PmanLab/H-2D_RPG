@@ -64,8 +64,8 @@ public class ButtonManager : MonoBehaviour
     /// </summary>
     public void BuyShopButton()
     {
-         npcInteract_ItemShop.TryPurchaseItem(currentIndexNumber);
          npcInteract_ItemShop.IndexButtonClose();
+         npcInteract_ItemShop.TryPurchaseItem(currentIndexNumber);
     }
     
     /// <summary>
@@ -81,6 +81,7 @@ public class ButtonManager : MonoBehaviour
     /// </summary>
     public void InnApplyButton()
     {
+        npcInteract_InnKeeper.ApplyCloseButton();
         npcInteract_InnKeeper.ApplyInn();
     }
 
