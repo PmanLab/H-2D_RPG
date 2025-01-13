@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class ButtonManager : MonoBehaviour
 {
     //=== シリアライズ ===
+    [SerializeField, Header("GameStateManagerをアタッチ")] private GameStateManager gameStateManager;
     [SerializeField, Header("NPCInteract_ItemShop(対応させるNPC)をアタッチ")] NPCInteract_ItemShop npcInteract_ItemShop;
     [SerializeField, Header("NPCInteract_InnKeeper(対応させるNPC)をアタッチ")] NPCInteract_InnKeeper npcInteract_InnKeeper;
     [SerializeField, Header("リスト選択番号を入力")] private int currentIndexNumber = 0;
@@ -56,7 +57,7 @@ public class ButtonManager : MonoBehaviour
     /// </summary>
     public void UnPause()
     {
-         GameStateManager.instance.EndPaused();
+        gameStateManager.IsInPause = false;
     }
 
     /// <summary>

@@ -113,7 +113,7 @@ public class PlayerController : MonoBehaviour
     {
         playerMove.Move(moveInput.Value);   // 移動の処理
         Debug.Log("現在のゲーム内時間状況⇒（"+ Time.timeScale + ")");
-        Debug.Log("現在の会話状況⇒ (" + PlayerStateManager.instance.GetConversation() + ")");
+        Debug.Log("現在の会話状況⇒ (" + PlayerStateManager.instance.IsInConversation+ ")");
     }
 
 

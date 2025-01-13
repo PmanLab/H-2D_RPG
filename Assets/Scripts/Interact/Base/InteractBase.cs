@@ -11,6 +11,8 @@ public abstract class InteractBase : MonoBehaviour
     //=== シリアライズ ===
     [SerializeField, Header("PlayerStatusManagerをアタッチ")] private PlayerStatusManager playerStatusManager;
     [SerializeField, Header("PlayerControllerをアタッチ")] private PlayerController playerController;
+    [SerializeField, Header("GameStateManagerをアタッチ")] private GameStateManager gameStateManager;
+    [SerializeField, Header("Inventoryをアタッチ")] public Inventory inventory;
 
     [SerializeField, Header("オブジェクト名")] private string interactableName;
     [SerializeField, Header("表示するインタラクト可能UI")] private GameObject interactUI;
@@ -51,8 +53,11 @@ public abstract class InteractBase : MonoBehaviour
     public void Interact()
     {
         Debug.Log("いんたらくと処理が承認されました");
-        if (PlayerStateManager.instance.GetConversation() && 
-            PlayerStateManager.instance.GetChoice()) { return; }
+        if (PlayerStateManager.instance.IsInConversation ||
+            PlayerStateManager.instance.IsChoice ||
+            gameStateManager.IsInPause ||
+            inventory.isShowInventoryUI
+            ) { return; }
         InteractProcess();
     }
 

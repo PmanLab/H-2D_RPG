@@ -13,6 +13,7 @@ public class Inventory : MonoBehaviour
     [SerializeField, Header("インベントリ内容表示用テキスト")] private Text inventoryText; // インベントリ内容を表示するUIテキスト
     [SerializeField, Header("インベントリUI")] private GameObject inventoryUI;
     [SerializeField, Header("InteractBaseをアタッチ")] private InteractBase interactBase;
+    [SerializeField, Header("GameStateManagerをアタッチ")] private GameStateManager gameStateManager;
 
     //=== 変数宣言 ===
     private List<BaseItem> items = new List<BaseItem>(); // 所持アイテムリスト
@@ -111,7 +112,7 @@ public class Inventory : MonoBehaviour
     public void ShowInventoryUI()
     {
         //--- 会話検知処理 ---
-        if (!PlayerStateManager.instance.GetConversation() && !GameStateManager.instance.GetPaused())
+        if (!PlayerStateManager.instance.IsInConversation && !gameStateManager.IsInPause)
         {
             //--- インベントリ表示非表示処理 ---
             if (!isShowInventoryUI)
@@ -128,13 +129,13 @@ public class Inventory : MonoBehaviour
                 Time.timeScale = 1.0f;
             }
         }
-        else if(PlayerStateManager.instance.GetConversation())
+        else if(PlayerStateManager.instance.IsInConversation)
         {
             Time.timeScale = 1.0f;
             inventoryUI.SetActive(false);
             isShowInventoryUI = false;
         }
-        else if(GameStateManager.instance.GetPaused())
+        else if(gameStateManager.IsInPause)
         {
             inventoryUI.SetActive(false);
             isShowInventoryUI = false;

@@ -18,9 +18,29 @@ public class PlayerStateManager : MonoBehaviour
     }
 
     //=== 変数宣言 ===
-    private ReactiveProperty<bool> IsInConversation = new ReactiveProperty<bool>(false);    // 会話フラグ
-    private ReactiveProperty<bool> IsChoice = new ReactiveProperty<bool>(false);    // 選択肢フラグ
+    private ReactiveProperty<bool> isInConversation = new ReactiveProperty<bool>(false);    // 会話フラグ
+    private ReactiveProperty<bool> isChoice = new ReactiveProperty<bool>(false);    // 選択肢フラグ
     private ReactiveProperty<PlayerState> eCurrentPlayerState = new ReactiveProperty<PlayerState>(PlayerState.Idle); // プレイヤー状態
+
+    //=== プロパティ ===
+    public bool IsInConversation
+    {
+        get => isInConversation.Value;
+        set => isInConversation.Value = value;
+    }
+
+    public bool IsChoice 
+    {
+        get => isChoice.Value; 
+        set => isChoice.Value = value;
+    }
+
+    public PlayerState CurrentPlayerState
+    {
+        get => eCurrentPlayerState.Value;
+        set => eCurrentPlayerState.Value = value;
+    }
+
 
     //=== メソッド ===
     /// <summary>
@@ -47,7 +67,7 @@ public class PlayerStateManager : MonoBehaviour
     private void Start()
     {
         //--- 状態の変更を監視(各状態ごとの処理を設定) --- 
-        IsInConversation.Subscribe(isTalking =>
+        isInConversation.Subscribe(isTalking =>
         {
             if (isTalking)
             {// 会話開始時処理
@@ -91,78 +111,8 @@ public class PlayerStateManager : MonoBehaviour
     private void OnDestroy()
     {
         // ReactivePropertyを解放
-        IsInConversation.Dispose();
-        IsChoice.Dispose();
+        isInConversation.Dispose();
+        isChoice.Dispose();
         eCurrentPlayerState.Dispose();
-    }
-
-    /// <summary>
-    /// ・会話フラグをONにする
-    /// ※会話開始
-    /// </summary>
-    public void StartConversation()
-    {
-        IsInConversation.Value = true;
-    }
-
-    /// <summary>
-    /// ・会話フラグをOFFにする
-    /// ※会話終了メソッド
-    /// </summary>
-    public void EndConversation()
-    {
-        IsInConversation.Value = false;
-    }
-
-    /// <summary>
-    /// ・現在の会話状態を返す
-    /// </summary>
-    /// <returns>会話状態を取得する</returns>
-    public bool GetConversation()
-    {
-        return IsInConversation.Value;
-    }
-
-    /// <summary>
-    /// ・選択肢状態をONにする
-    /// </summary>
-    public void StartChoice()
-    {
-        IsChoice.Value = true;
-    }
-
-    /// <summary>
-    /// ・選択肢状態をOFFにする
-    /// </summary>
-    public void EndChoice()
-    {
-        IsChoice.Value = false;
-    }
-
-    /// <summary>
-    /// ・現在の選択肢状態を返す
-    /// </summary>
-    /// <returns>選択状態を取得する</returns>
-    public bool GetChoice()
-    { 
-        return IsChoice.Value;
-    }
-
-    /// <summary>
-    /// ・プレイヤー状態の設定処理
-    /// </summary>
-    /// <param name="playerState">セットしたいプレイヤーの状態</param>
-    public void ChangePlayeState(PlayerState playerState)
-    {
-        eCurrentPlayerState.Value = playerState;
-    }
-
-    /// <summary>
-    /// ・現在のプレイヤー状態を返す
-    /// </summary>
-    /// <returns>現在のプレイヤー状態を取得する</returns>
-    public PlayerState GetPlayerState()
-    {
-        return eCurrentPlayerState.Value;
     }
 }

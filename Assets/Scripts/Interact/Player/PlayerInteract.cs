@@ -12,7 +12,6 @@ public class PlayerInteract : InteractBase
     [SerializeField, Header("インタラクト可能な距離")] private float interactRange = 2.0f;  // インタラクト可能な範囲
     [SerializeField, Header("インタラクト用のレイヤー")] private LayerMask interactableLayer;  // インタラクト可能なオブジェクトのレイヤー
     [SerializeField, Header("PlayerInputをアタッチ")] private PlayerInput playerInput;
-    [SerializeField, Header("Inventoryをアタッチ")] private Inventory inventory;
 
     //=== 変数宣言 ===
     public InputAction interactAction { get; set; }     // "Interact"アクションを保持する変数
@@ -46,12 +45,12 @@ public class PlayerInteract : InteractBase
 
         //--- UIの表示/非表示を分けて処理 ---
         Observable.EveryUpdate()
-            .Where(_ => CanInteract() && !inventory.isShowInventoryUI)
+            .Where(_ => CanInteract())
             .Subscribe(_ => ShowInteractUI(true))
             .AddTo(this);
 
         Observable.EveryUpdate()
-            .Where(_ => !CanInteract() || inventory.isShowInventoryUI)
+            .Where(_ => !CanInteract())
             .Subscribe(_ => ShowInteractUI(false))
             .AddTo(this);
     }

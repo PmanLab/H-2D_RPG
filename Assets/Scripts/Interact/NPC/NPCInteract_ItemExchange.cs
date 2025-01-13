@@ -9,7 +9,6 @@ using UniRx;
 public class NPCInteract_ItemExchange : InteractBase
 {
     //=== シリアライズ ===
-    [SerializeField, Header("Inventoryをアタッチ")] private Inventory inventory;
     [SerializeField, Header("PlayerInteractをアタッチ")] private PlayerInteract playerInteract;
 
     //=== 変数宣言 ===
@@ -36,8 +35,7 @@ public class NPCInteract_ItemExchange : InteractBase
     {
         SetNpcName();               // NPCの名前をセット
         currentDialogueIndex = 0;   // セリフインデックスをリセット
-        PlayerStateManager.instance.StartConversation();
-        //inventory.isConvertionActive = true;
+        PlayerStateManager.instance.IsInConversation = true;
         inventory.ShowInventoryUI();
 
         PlayerController.StopMovement();    // 会話中はプレイヤーの移動を停止
@@ -50,7 +48,7 @@ public class NPCInteract_ItemExchange : InteractBase
 
         // 新しい購読を登録
         conversationSubscription = Observable.EveryUpdate()
-            .Where(_ => PlayerStateManager.instance.GetConversation() && !PlayerController.IsMoving && playerInteract.interactAction.triggered)
+            .Where(_ => PlayerStateManager.instance.IsInConversation && !PlayerController.IsMoving && playerInteract.interactAction.triggered)
             .Subscribe(_ =>
             {
                 if (currentDialogueIndex < ConversationList.Count)
@@ -85,7 +83,7 @@ public class NPCInteract_ItemExchange : InteractBase
     private void EndConversation()
     {
         Debug.Log("会話を終了しました・.");
-        PlayerStateManager.instance.EndConversation();
+        PlayerStateManager.instance.IsInConversation = false;
         ShowDialogueWindow(false);              // 会話ウィンドウを非表示
         ShowInteractUI(true);    // インタラクトUIを再表示
         PlayerController.ResumeMovement();      // プレイヤーの移動を再開

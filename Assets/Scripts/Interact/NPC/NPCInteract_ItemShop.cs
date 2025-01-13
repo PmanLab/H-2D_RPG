@@ -17,7 +17,6 @@ public class NPCInteract_ItemShop : InteractBase
 
 
     [SerializeField, Header("購入可能アイテム")] private List<BaseItem> shopItems;
-    [SerializeField, Header("プレイヤーのインベントリ")] private Inventory inventory;
     [SerializeField, Header("購入可能なアイテムリストを表示するUI")] private GameObject ItemListUI;
     [SerializeField, Header("購入可能なアイテムリストを表示するText")] private Text ItemListText;
     [SerializeField, Header("購入選択ボタンUI")] private GameObject indexButtonUI;
@@ -50,11 +49,11 @@ public class NPCInteract_ItemShop : InteractBase
     private void StartConversation()
     {
         // 会話がすでに進行中であればインデックスをリセットしない
-        if (!PlayerStateManager.instance.GetConversation())
+        if (!PlayerStateManager.instance.IsInConversation)
         {
             SetNpcName();               // NPCの名前をセット
             currentDialogueIndex = 0;  // セリフインデックスをリセット
-            PlayerStateManager.instance.StartConversation();
+            PlayerStateManager.instance.IsInConversation = true;
             inventory.ShowInventoryUI();
 
             PlayerController.StopMovement();    // 会話中はプレイヤーの移動を停止
@@ -67,8 +66,8 @@ public class NPCInteract_ItemShop : InteractBase
 
             // 新しい購読を登録
             conversationSubscription = Observable.EveryUpdate()
-                .Where(_ => PlayerStateManager.instance.GetConversation() && 
-                            !PlayerStateManager.instance.GetChoice() &&
+                .Where(_ => PlayerStateManager.instance.IsInConversation &&
+                            !PlayerStateManager.instance.IsChoice &&
                             !PlayerController.IsMoving && 
                             playerInteract.interactAction.triggered)
                 .Subscribe(_ =>
@@ -175,7 +174,7 @@ public class NPCInteract_ItemShop : InteractBase
     /// <param name="dialougue">表示するアイテムテキスト</param>
     private void DisplayItemList(string dialougue)
     {
-        PlayerStateManager.instance.StartChoice();
+        PlayerStateManager.instance.IsChoice = true;
         ShowItemListDialogueWindow(true);
         ItemListText.text = dialougue;
 
@@ -220,8 +219,8 @@ public class NPCInteract_ItemShop : InteractBase
     private void EndConversation()
     {
         Debug.Log("会話を終了しました・・・");
-        PlayerStateManager.instance.EndConversation();
-        PlayerStateManager.instance.EndChoice();
+        PlayerStateManager.instance.IsInConversation = false;
+        PlayerStateManager.instance.IsChoice = false;
         ShowDialogueWindow(false);              // 会話ウィンドウを非表示
         ShowItemListDialogueWindow(false);      // アイテムリストウィンドウを非表示
         ShowInteractUI(true);                   // インタラクトUIを再表示

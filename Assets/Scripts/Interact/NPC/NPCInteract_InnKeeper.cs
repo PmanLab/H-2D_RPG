@@ -15,7 +15,6 @@ public class NPCInteract_InnKeeper : InteractBase
     [SerializeField, Header("宿屋の価格")] private int innPrice;
     [SerializeField, Header("宿屋の宿泊メッセージ")] private string innMessage;
 
-    [SerializeField, Header("Inventoryをアタッチ")] private Inventory inventory;
     [SerializeField, Header("PlayerInteractをアタッチ")] private PlayerInteract playerInteract;
     [SerializeField, Header("宿泊承認ボタンUI")] private GameObject applyButtonUI;
     [SerializeField, Header("最初に選択状態にするボタンをアタッチ")] private GameObject firstApplyButton;
@@ -45,7 +44,7 @@ public class NPCInteract_InnKeeper : InteractBase
     {
         SetNpcName();           //NPCの名前をセット
         currentDialogueIndex = 0; // セリフインデックスをリセット
-        PlayerStateManager.instance.StartConversation();
+        PlayerStateManager.instance.IsInConversation = true;
         inventory.ShowInventoryUI();
 
         PlayerController.StopMovement(); // 会話中はプレイヤーの移動を停止
@@ -58,8 +57,8 @@ public class NPCInteract_InnKeeper : InteractBase
 
         // 新しい購読を登録
         conversationSubscription = Observable.EveryUpdate()
-            .Where(_ => PlayerStateManager.instance.GetConversation() &&
-                        !PlayerStateManager.instance.GetChoice() &&
+            .Where(_ => PlayerStateManager.instance.IsInConversation &&
+                        !PlayerStateManager.instance.IsChoice &&
                         !PlayerController.IsMoving && 
                         playerInteract.interactAction.triggered)
             .Subscribe(_ =>
@@ -87,7 +86,7 @@ public class NPCInteract_InnKeeper : InteractBase
     /// </summary>
     private void DisplayInnConfirmation()
     {
-        PlayerStateManager.instance.StartChoice();
+        PlayerStateManager.instance.IsChoice = true;
         isAccommodationConfirmationActive = true;
         DisplayDialogue("宿泊しますか？");
         ShowButton(true);   // 宿泊をするかの確認ボタンを表示
@@ -99,7 +98,7 @@ public class NPCInteract_InnKeeper : InteractBase
     /// </summary>
     public void ApplyInn()
     {
-        if (PlayerStateManager.instance.GetConversation() && isAccommodationConfirmationActive)
+        if (PlayerStateManager.instance.IsInConversation && isAccommodationConfirmationActive)
         {// 会話中で非宿泊状態の場合処理を通す
             if (PlayerStatusManager.CanAfford(innPrice))
             {// お金が足りた場合に処理を通す
@@ -175,8 +174,8 @@ public class NPCInteract_InnKeeper : InteractBase
     private void EndConversation()
     {
         Debug.Log("会話を終了しました・.");
-        PlayerStateManager.instance.EndConversation();
-        PlayerStateManager.instance.EndChoice();
+        PlayerStateManager.instance.IsInConversation = false;
+        PlayerStateManager.instance.IsChoice = false;
         ShowDialogueWindow(false);                  // 会話ウィンドウを非表示
         ShowButton(false);                          // 宿泊承認確認ボタンを非表示
         ShowInteractUI(true);                       // インタラクトUIを再表示
