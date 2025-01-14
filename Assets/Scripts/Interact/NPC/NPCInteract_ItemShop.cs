@@ -1,6 +1,9 @@
 ﻿using System;
 using UnityEngine;
 using UniRx;
+using System.Collections.Generic;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 /// <summary>
 /// NPCインタラクト_ショップ(InteractBase継承)
@@ -12,12 +15,18 @@ public class NPCInteract_ItemShop : InteractBase
     [SerializeField, Header("アイテム価格")] private int itemPrice;
     [SerializeField, Header("アイテムの購入確認メッセージ")] private string purchaseMessage;
 
-    [SerializeField, Header("インタラクトUIを制御するPlayerInteract")] private PlayerInteract playerInteract;  // PlayerInteractを参照
+
+    [SerializeField, Header("購入可能アイテム")] private List<BaseItem> shopItems;
+    [SerializeField, Header("購入可能なアイテムリストを表示するUI")] private GameObject ItemListUI;
+    [SerializeField, Header("購入可能なアイテムリストを表示するText")] private Text ItemListText;
+    [SerializeField, Header("購入選択ボタンUI")] private GameObject indexButtonUI;
+    [SerializeField, Header("最初に選択状態にするボタンをアタッチ")] private GameObject firstIndexButton;
+    [SerializeField, Header("PlayerInteractをアタッチ")] private PlayerInteract playerInteract;
+
 
     //=== 変数宣言 ===
     private int currentDialogueIndex = 0;  // 現在の会話のインデックス
-    private bool isConversationActive = false;
-    private bool isPurchaseConfirmationActive = false;
+    private bool isPurchaseConfirmationActive = false;  // 購入確認フラグ
     private IDisposable conversationSubscription; // 購読を管理する変数
 
 
@@ -26,7 +35,7 @@ public class NPCInteract_ItemShop : InteractBase
     ///・ 継承したインタラクト処理内で
     /// 　このNPCが会話した時のメソッドを呼び出す
     /// </summary>
-    public override void Interact()
+    public override void InteractProcess()
     {
         // 会話を表示
         StartConversation();
@@ -40,11 +49,12 @@ public class NPCInteract_ItemShop : InteractBase
     private void StartConversation()
     {
         // 会話がすでに進行中であればインデックスをリセットしない
-        if (!isConversationActive)
+        if (!PlayerStateManager.instance.IsInConversation)
         {
             SetNpcName();               // NPCの名前をセット
             currentDialogueIndex = 0;  // セリフインデックスをリセット
-            isConversationActive = true;
+            PlayerStateManager.instance.IsInConversation = true;
+            inventory.ShowInventoryUI();
 
             PlayerController.StopMovement();    // 会話中はプレイヤーの移動を停止
             DisplayDialogue(InitialDialogue);   // 最初のセリフを表示
@@ -56,7 +66,10 @@ public class NPCInteract_ItemShop : InteractBase
 
             // 新しい購読を登録
             conversationSubscription = Observable.EveryUpdate()
-                .Where(_ => isConversationActive && !PlayerController.IsMoving && Input.GetKeyDown(KeyCode.Space))
+                .Where(_ => PlayerStateManager.instance.IsInConversation &&
+                            !PlayerStateManager.instance.IsChoice &&
+                            !PlayerController.IsMoving && 
+                            playerInteract.interactAction.triggered)
                 .Subscribe(_ =>
                 {
                     if (currentDialogueIndex < ConversationList.Count)
@@ -96,55 +109,52 @@ public class NPCInteract_ItemShop : InteractBase
     private void DisplayPurchaseConfirmation()
     {
         isPurchaseConfirmationActive = true;
-        DisplayDialogue("アイテムを購入しますか？ (Y: はい, N: いいえ)");
 
-        // 購読を使ってユーザーの入力を確認
-        conversationSubscription?.Dispose();  // 以前の購読を解除
-
-        // 購読を登録
-        conversationSubscription = Observable.EveryUpdate()
-            .Where(_ => isPurchaseConfirmationActive)
-            .Subscribe(_ =>
-            {
-                if (Input.GetKeyDown(KeyCode.Y))  // 「Y」が押された場合
-                {
-                    if (PlayerStatusManager.CanAfford(itemPrice))
-                    {
-                        PlayerStatusManager.SpendMoney(itemPrice);
-                        Debug.Log("アイテムを購入しました！");
-                        DisplayDialogue("アイテムを購入しました！");
-
-                        // アイテム付与処理を追加する場所
-
-                        // アイテム購入後、2秒後に会話終了
-                        Observable.Timer(TimeSpan.FromSeconds(2))
-                            .Subscribe(_ => EndConversation())
-                            .AddTo(this);
-                    }
-                    else
-                    {
-                        DisplayDialogue("お金が足りません！");
-                        Debug.Log("お金が足りません！");
-
-                        // お金が足りない場合も2秒後に会話終了
-                        Observable.Timer(TimeSpan.FromSeconds(2))
-                            .Subscribe(_ => EndConversation())
-                            .AddTo(this);
-                    }
-                }
-                else if (Input.GetKeyDown(KeyCode.N))  // 「N」が押された場合
-                {
-                    DisplayDialogue("購入がキャンセルされました");
-
-                    // メッセージ表示指定した待機時間後、会話終了
-                    Observable.Timer(TimeSpan.FromSeconds(ConstantManager.interactWaitingTime))
-                    .Subscribe(_ => EndConversation())
-                    .AddTo(this);
-
-                }
-            }).AddTo(this);  // メモリリーク防止
+        // アイテムリストを表示委
+        string dialogue = "購入するアイテムを選んでください!!\n\n";
+        for (int i = 0; i < shopItems.Count; i++)
+        {
+            dialogue += $"{i + 1}. {shopItems[i].itemName} - {shopItems[i].price}G \n ({shopItems[i].description}) \n\n";  // 価格も表示
+        }
+        DisplayDialogue("商品を選んでください。");
+        DisplayItemList(dialogue);
     }
 
+    public void TryPurchaseItem(int ListIndex)
+    {
+        if (PlayerStatusManager.CanAfford(shopItems[ListIndex].price))
+        {
+            if (inventory.AddItem(shopItems[ListIndex]))
+            {
+                PlayerStatusManager.SpendMoney(shopItems[ListIndex].price);
+                Debug.Log("アイテムを購入しました！");
+                DisplayDialogue("アイテムを購入しました！またご利用ください！");
+            }
+            else
+            {
+                DisplayDialogue("インベントリがいっぱいです！");
+            }
+
+            isPurchaseConfirmationActive = false;
+            // アイテム購入後、2秒後に会話終了
+            Observable.Timer(TimeSpan.FromSeconds(2))
+                .Subscribe(_ => EndConversation())
+                .AddTo(this);
+
+        }
+        else
+        {
+            DisplayDialogue("お金が足りません！");
+            Debug.Log("お金が足りません！");
+            isPurchaseConfirmationActive = false;
+
+
+            // お金が足りない場合も2秒後に会話終了
+            Observable.Timer(TimeSpan.FromSeconds(2))
+                .Subscribe(_ => EndConversation())
+                .AddTo(this);
+        }
+    }
 
     /// <summary>
     /// ・会話を表示するメソッド
@@ -153,8 +163,54 @@ public class NPCInteract_ItemShop : InteractBase
     /// <param name="dialogue">表示するセリフ</param>
     private void DisplayDialogue(string dialogue)
     {
-        ShowDialogueWindow(true);       
-        DialogueText.text = dialogue;   
+        ShowDialogueWindow(true);
+        DialogueText.text = dialogue;
+    }
+
+    /// <summary>
+    /// ・アイテムリストを表示するメソッド
+    /// ・会話ウィンドウとテキストを表示
+    /// </summary>
+    /// <param name="dialougue">表示するアイテムテキスト</param>
+    private void DisplayItemList(string dialougue)
+    {
+        PlayerStateManager.instance.IsChoice = true;
+        ShowItemListDialogueWindow(true);
+        ItemListText.text = dialougue;
+
+    }
+
+    /// <summary>
+    /// ・購入可能なアイテムリストウィンドウの表示・非表示を切り替える処理
+    /// </summary>
+    /// <param name="isVisible">メッセージウィンドウの有効・無効</param>
+    public virtual void ShowItemListDialogueWindow(bool isVisible)
+    {
+        ItemListUI.SetActive(isVisible);                                // ウィンドウの表示/非表示を設定
+        ItemListText.gameObject.SetActive(isVisible);                   // テキストの表示/非表示を設定
+        indexButtonUI.gameObject.SetActive(isVisible);                  // インデックスボタンの表示/非表示を設定
+        EventSystem.current.SetSelectedGameObject(firstIndexButton);    // 最初に選択状態にするボタンを割り当て
+    }
+
+    /// <summary>
+    /// ・購入ボタンを非表示にする
+    /// </summary>
+    public void IndexButtonClose()
+    {
+        indexButtonUI.gameObject.SetActive(false);              // インデックスボタンを非表示に設定
+    }
+
+    /// <summary>
+    /// ・ショップを閉じる
+    /// </summary>
+    public void ShopCloseButton()
+    {
+        DisplayDialogue("またご利用ください！");
+        // 2秒後に会話終了
+        Observable.Timer(TimeSpan.FromSeconds(2))
+            .Subscribe(_ => EndConversation())
+            .AddTo(this);
+        indexButtonUI.gameObject.SetActive(false);             // インデックスボタンを非表示に設定
     }
 
     /// <summary>
@@ -162,14 +218,17 @@ public class NPCInteract_ItemShop : InteractBase
     /// </summary>
     private void EndConversation()
     {
-        Debug.Log("会話を終了しました・.");
-        isConversationActive = false;
+        Debug.Log("会話を終了しました・・・");
+        PlayerStateManager.instance.IsInConversation = false;
+        PlayerStateManager.instance.IsChoice = false;
         ShowDialogueWindow(false);              // 会話ウィンドウを非表示
-        ShowInteractUI(true);    // インタラクトUIを再表示
+        ShowItemListDialogueWindow(false);      // アイテムリストウィンドウを非表示
+        ShowInteractUI(true);                   // インタラクトUIを再表示
         PlayerController.ResumeMovement();      // プレイヤーの移動を再開
 
         conversationSubscription?.Dispose();    // 購読を解除
 
-        isPurchaseConfirmationActive = false;
+        isPurchaseConfirmationActive = false;   // 購入確認フラグ
     }
 }
+

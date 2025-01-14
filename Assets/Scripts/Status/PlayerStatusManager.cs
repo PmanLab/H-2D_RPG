@@ -8,8 +8,7 @@ using UnityEngine.UI;
 public class PlayerStatusManager : StatusManagerBase
 {
     //=== シリアライズ ===
-    //[SerializeField, Header("最大HP")] private int maxHealth = 100;
-    [SerializeField, Header("初期所持金")] private int startingMoney = 100;
+    [SerializeField, Header("所持金データ")] private DataMoney moneyData;
     [SerializeField, Header("所持金表示用のUI")] private GameObject currentMoneyUI;            // 所持金を表示するUIまとめ
     [SerializeField, Header("所持金表示用のテキスト")] private Text currentMoneyDisplayText;  // 所持金を表示するTextコンポーネント
 
@@ -48,7 +47,7 @@ public class PlayerStatusManager : StatusManagerBase
     protected override void Awake()
     {
         base.Awake();  // 親クラスのAwakeを呼び出してHPを初期化
-        currentMoney = startingMoney;
+        currentMoney = moneyData.StartingMoney;
         SetCurrentMoney();  // 初期所持金をUIテキストで表示
         Debug.Log($"初期所持金: {currentMoney}円");
     }

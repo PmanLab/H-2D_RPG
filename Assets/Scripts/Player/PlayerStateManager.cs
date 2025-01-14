@@ -18,8 +18,29 @@ public class PlayerStateManager : MonoBehaviour
     }
 
     //=== 変数宣言 ===
-    private ReactiveProperty<bool> bIsInConversation = new ReactiveProperty<bool>(false);   // 会話フラグ
+    private ReactiveProperty<bool> isInConversation = new ReactiveProperty<bool>(false);    // 会話フラグ
+    private ReactiveProperty<bool> isChoice = new ReactiveProperty<bool>(false);    // 選択肢フラグ
     private ReactiveProperty<PlayerState> eCurrentPlayerState = new ReactiveProperty<PlayerState>(PlayerState.Idle); // プレイヤー状態
+
+    //=== プロパティ ===
+    public bool IsInConversation
+    {
+        get => isInConversation.Value;
+        set => isInConversation.Value = value;
+    }
+
+    public bool IsChoice 
+    {
+        get => isChoice.Value; 
+        set => isChoice.Value = value;
+    }
+
+    public PlayerState CurrentPlayerState
+    {
+        get => eCurrentPlayerState.Value;
+        set => eCurrentPlayerState.Value = value;
+    }
+
 
     //=== メソッド ===
     /// <summary>
@@ -46,7 +67,7 @@ public class PlayerStateManager : MonoBehaviour
     private void Start()
     {
         //--- 状態の変更を監視(各状態ごとの処理を設定) --- 
-        bIsInConversation.Subscribe(isTalking =>
+        isInConversation.Subscribe(isTalking =>
         {
             if (isTalking)
             {// 会話開始時処理
@@ -90,42 +111,8 @@ public class PlayerStateManager : MonoBehaviour
     private void OnDestroy()
     {
         // ReactivePropertyを解放
-        bIsInConversation.Dispose();
+        isInConversation.Dispose();
+        isChoice.Dispose();
         eCurrentPlayerState.Dispose();
-    }
-
-    /// <summary>
-    /// ・会話フラグをONにする
-    /// ※会話開始
-    /// </summary>
-    public void StartConversation()
-    {
-        bIsInConversation.Value = true;
-    }
-
-    /// <summary>
-    /// ・会話フラグをOFFにする
-    /// ※会話終了メソッド
-    /// </summary>
-    public void EndConversation()
-    {
-        bIsInConversation.Value = false;
-    }
-
-    /// <summary>
-    /// ・プレイヤー状態の設定処理
-    /// </summary>
-    /// <param name="playerState">セットしたいプレイヤーの状態</param>
-    public void ChangePlayeState(PlayerState playerState)
-    {
-        eCurrentPlayerState.Value = playerState;
-    }
-
-    /// <summary>
-    /// </summary>
-    /// <returns>現在のプレイヤー状態を取得する</returns>
-    public PlayerState GetPlayerState()
-    {
-        return eCurrentPlayerState.Value;
     }
 }

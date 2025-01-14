@@ -11,6 +11,8 @@ public abstract class InteractBase : MonoBehaviour
     //=== シリアライズ ===
     [SerializeField, Header("PlayerStatusManagerをアタッチ")] private PlayerStatusManager playerStatusManager;
     [SerializeField, Header("PlayerControllerをアタッチ")] private PlayerController playerController;
+    [SerializeField, Header("GameStateManagerをアタッチ")] private GameStateManager gameStateManager;
+    [SerializeField, Header("Inventoryをアタッチ")] public Inventory inventory;
 
     [SerializeField, Header("オブジェクト名")] private string interactableName;
     [SerializeField, Header("表示するインタラクト可能UI")] private GameObject interactUI;
@@ -31,9 +33,10 @@ public abstract class InteractBase : MonoBehaviour
     public PlayerController PlayerController => playerController;
     public GameObject DialogueWindow => dialogueWindow;
 
+
     /// <summary>
     /// ・インスペクターで指定した名前を
-    /// メッセージウィンドウで表示
+    /// 　メッセージウィンドウで表示
     /// </summary>
     public virtual void SetNpcName() => nameDisplayText.text = interactableName;
 
@@ -45,10 +48,24 @@ public abstract class InteractBase : MonoBehaviour
     public virtual void ShowInteractUI(bool isVisible) => interactUI.SetActive(isVisible);
 
     /// <summary>
+    /// ・非会話状態時にインタラクト処理を行う
+    /// </summary>
+    public void Interact()
+    {
+        Debug.Log("いんたらくと処理が承認されました");
+        if (PlayerStateManager.instance.IsInConversation ||
+            PlayerStateManager.instance.IsChoice ||
+            gameStateManager.IsInPause ||
+            inventory.isShowInventoryUI
+            ) { return; }
+        InteractProcess();
+    }
+
+    /// <summary>
     /// ・仮想関数
     /// └ 継承クラスで処理を書く
     /// </summary>
-    public abstract void Interact();
+    public abstract void InteractProcess();
 
     /// <summary>
     /// ・会話ウィンドウの表示・非表示を切り替える処理
