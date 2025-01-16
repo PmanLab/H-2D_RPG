@@ -12,15 +12,11 @@ public class PlayerStatusManager : StatusManagerBase
     [SerializeField, Header("所持金表示用のUI")] private GameObject currentMoneyUI;            // 所持金を表示するUIまとめ
     [SerializeField, Header("所持金表示用のテキスト")] private Text currentMoneyDisplayText;  // 所持金を表示するTextコンポーネント
 
-
-    //=== 所持金関連 ===
-    private int currentMoney; // 所持金
-
     //=== プロパティ ===
     /// <summary>
     /// ・現在の所持金を表示用テキストに設定する処理
     /// </summary>
-    public void SetCurrentMoney() => currentMoneyDisplayText.text = currentMoney.ToString();
+    public void SetCurrentMoney() => currentMoneyDisplayText.text = moneyData.CurrentMoney.ToString();
 
     /// <summary>
     /// ・所持金UI表示・非表示を切り替える処理
@@ -34,7 +30,7 @@ public class PlayerStatusManager : StatusManagerBase
     /// </summary>
     /// <param name="amount">比べる他対象のお金情報</param>
     /// <returns></returns>
-    public bool CanAfford(int amount) => currentMoney >= amount;
+    public bool CanAfford(int amount) => moneyData.CurrentMoney >= amount;
 
     //=== メソッド ===
     /// <summary>
@@ -47,9 +43,9 @@ public class PlayerStatusManager : StatusManagerBase
     protected override void Awake()
     {
         base.Awake();  // 親クラスのAwakeを呼び出してHPを初期化
-        currentMoney = moneyData.StartingMoney;
+        moneyData.CurrentMoney = moneyData.CurrentMoney;
         SetCurrentMoney();  // 初期所持金をUIテキストで表示
-        Debug.Log($"初期所持金: {currentMoney}円");
+        Debug.Log($"初期所持金: {moneyData.CurrentMoney}円");
     }
 
     /// <summary>
@@ -59,11 +55,11 @@ public class PlayerStatusManager : StatusManagerBase
     /// <returns>減らす金額が所持金以上ならtrue、足りない場合はfalse</returns>
     public bool SpendMoney(int amount)
     {
-        if (currentMoney >= amount)
+        if (moneyData.CurrentMoney >= amount)
         {
-            currentMoney -= amount;
+            moneyData.CurrentMoney -= amount;
             SetCurrentMoney();
-            Debug.Log($"所持金: {currentMoney}円");
+            Debug.Log($"所持金: {moneyData.CurrentMoney}円");
             return true;
         }
         else
@@ -79,9 +75,9 @@ public class PlayerStatusManager : StatusManagerBase
     /// <param name="amount">追加する金額</param>
     public void AddMoney(int amount)
     {
-        currentMoney += amount;
+        moneyData.CurrentMoney += amount;
         SetCurrentMoney();
-        Debug.Log($"所持金: {currentMoney}円");
+        Debug.Log($"所持金: {moneyData.CurrentMoney}円");
     }
 
     /// <summary>
@@ -91,7 +87,7 @@ public class PlayerStatusManager : StatusManagerBase
     protected override void Die()
     {
         base.Die();
-        currentMoney = 0;       // 所持金全てを失う
+        moneyData.CurrentMoney = 0;       // 所持金全てを失う
         Debug.Log("プレイヤーが死亡しました！");
     }
 }

@@ -14,9 +14,8 @@ public class Inventory : MonoBehaviour
     [SerializeField, Header("インベントリUI")] private GameObject inventoryUI;
     [SerializeField, Header("InteractBaseをアタッチ")] private InteractBase interactBase;
     [SerializeField, Header("GameStateManagerをアタッチ")] private GameStateManager gameStateManager;
-
+    [SerializeField, Header("購入可能リスト")] private List<BaseItem> items = new List<BaseItem>(); // 所持アイテムリスト
     //=== 変数宣言 ===
-    private List<BaseItem> items = new List<BaseItem>(); // 所持アイテムリスト
     public bool isShowInventoryUI { get; set; } = false;
 
     /// <summary>
@@ -34,6 +33,12 @@ public class Inventory : MonoBehaviour
             {
                 existingItem.StackItem();
                 Debug.Log($"アイテム {item.itemName} をスタックしました。");
+
+                // スタック数を保存
+                PlayerPrefs.SetInt($"Stack_{item.itemName}", existingItem.CurrentStackCount);
+                PlayerPrefs.Save();
+
+                UpdateInventoryUI();
                 return true;
             }
             else
@@ -48,7 +53,15 @@ public class Inventory : MonoBehaviour
             if (items.Count < maxSlots)
             {
                 items.Add(item);
+                item.CurrentStackCount = 1;
+                //item.CurrentStackCount = PlayerPrefs.GetInt($"Stack_{item.itemName}", 0);
+
+                // スタック数を保存
+                PlayerPrefs.SetInt($"Stack_{item.itemName}", existingItem.CurrentStackCount);
+                PlayerPrefs.Save();
+
                 Debug.Log($"アイテム {item.itemName} を追加しました。");
+                UpdateInventoryUI();
                 return true;
             }
             else
@@ -79,7 +92,7 @@ public class Inventory : MonoBehaviour
         Debug.Log("現在のインベントリ:");
         foreach (var item in items)
         {
-            Debug.Log($"{item.itemName} x{item.currentStackCount}");
+            Debug.Log($"{item.itemName} x{item.CurrentStackCount}");
         }
     }
 
@@ -99,7 +112,7 @@ public class Inventory : MonoBehaviour
         string inventoryContent = "インベントリ:\n";
         foreach (var item in items)
         {
-            inventoryContent += $"{item.itemName} x{item.currentStackCount}\n";
+            inventoryContent += $"{item.itemName} x{item.CurrentStackCount}\n";
         }
 
         // テキストUIに反映
@@ -117,10 +130,22 @@ public class Inventory : MonoBehaviour
             //--- インベントリ表示非表示処理 ---
             if (!isShowInventoryUI)
             {
+                // インベントリのスタック数をPlayerPrefsから反映させる
+                foreach (var item in items)
+                {
+                    item.CurrentStackCount = PlayerPrefs.GetInt($"Stack_{item.itemName}", 0);
+                }
+
                 UpdateInventoryUI();
                 inventoryUI.SetActive(true);
                 isShowInventoryUI = true;
                 Time.timeScale = 0.0f;
+
+                // インベントリ内のアイテムスタック数をコンソールに表示
+                foreach (var item in items)
+                {
+                    Debug.Log($"{item.itemName} のスタック数: {item.CurrentStackCount}");
+                }
             }
             else
             {
@@ -131,9 +156,21 @@ public class Inventory : MonoBehaviour
         }
         else if(PlayerStateManager.instance.IsInConversation)
         {
+            // インベントリのスタック数をPlayerPrefsから反映させる
+            foreach (var item in items)
+            {
+                item.CurrentStackCount = PlayerPrefs.GetInt($"Stack_{item.itemName}", 0);
+            }
+
             Time.timeScale = 1.0f;
             inventoryUI.SetActive(false);
             isShowInventoryUI = false;
+
+            // インベントリ内のアイテムスタック数をコンソールに表示
+            foreach (var item in items)
+            {
+                Debug.Log($"{item.itemName} のスタック数: {item.CurrentStackCount}");
+            }
         }
         else if(gameStateManager.IsInPause)
         {
