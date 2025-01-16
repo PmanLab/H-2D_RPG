@@ -32,6 +32,9 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void Start()
     {
+        //--- プレイヤーの位置を読み込む ---
+        LoadPosition();
+        
         //--- Actionの取得 ---
         var playerControls = playerInput.actions;
         moveForwardAction = playerControls["MoveForward"];
@@ -65,8 +68,39 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
+    /// ・プレイヤーの位置を保存する
+    /// </summary>
+    private void SavePosition()
+    {
+        Vector3 playerPosition = transform.position;
+        PlayerPrefs.SetFloat("PlayerPosX", playerPosition.x);
+        PlayerPrefs.SetFloat("PlayerPosY", playerPosition.y);
+        PlayerPrefs.SetFloat("PlayerPosZ", playerPosition.z);
+        PlayerPrefs.Save();
+    }
+
+    /// <summary>
+    /// ・プレイヤーの位置を読み込む
+    /// </summary>
+    private void LoadPosition()
+    {
+        if (PlayerPrefs.HasKey("PlayerPosX"))
+        {
+            float x = PlayerPrefs.GetFloat("PlayerPosX");
+            float y = PlayerPrefs.GetFloat("PlayerPosY");
+            float z = PlayerPrefs.GetFloat("PlayerPosZ");
+            transform.position = new Vector3(x, y, z);
+        }
+        else
+        {
+            // 初回起動など、位置が保存されていない場合のデフォルト位置
+            transform.position = Vector3.zero;
+        }
+    }
+
+    /// <summary>
     /// 
-    /// 入力行動更新メソッド
+    /// ・入力行動更新メソッド
     /// 
     /// 会話していない時、
     /// インプット時の移動判定処理(ここでは入力検知のみ)
@@ -103,7 +137,7 @@ public class PlayerController : MonoBehaviour
 
     /// <summary>
     /// 
-    /// 更新処理メソッド
+    /// ・更新処理メソッド
     /// 
     /// 入力情報を検知し、
     /// プレイヤーが移動する処理を実行する
@@ -121,7 +155,7 @@ public class PlayerController : MonoBehaviour
     /// 
     /// (会話フラグON)プレイヤー移動停止メソッド
     /// 
-    /// 会話開始時に移動を停止する処理
+    /// ・会話開始時に移動を停止する処理
     /// 
     /// </summary>
     public void StopMovement()
@@ -137,9 +171,17 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
+    /// ・アプリケーション終了時に位置を保存 
+    /// </summary>
+    private void OnApplicationQuit()
+    {
+        SavePosition();
+    }
+
+    /// <summary>
     /// OnDestroyメソッド 
     /// 
-    /// ReactivePropertyを解放
+    /// ・ReactivePropertyを解放
     /// 
     /// </summary>
     private void OnDestroy()
