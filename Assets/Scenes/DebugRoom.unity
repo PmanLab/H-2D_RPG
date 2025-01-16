@@ -4565,6 +4565,10 @@ MonoBehaviour:
   inventoryUI: {fileID: 691646504}
   interactBase: {fileID: 1915051091}
   gameStateManager: {fileID: 491959125}
+  items:
+  - {fileID: 11400000, guid: a7596f27fe2c689409ccef2d496e5837, type: 2}
+  - {fileID: 11400000, guid: c1282e74f4c8a0d42b2a260ca7ce7461, type: 2}
+  - {fileID: 11400000, guid: e9c23322af9e7d34b83dd87042c172f9, type: 2}
 --- !u!1 &1919146952
 GameObject:
   m_ObjectHideFlags: 0
