@@ -2,6 +2,7 @@
 using UniRx;
 using System;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 
 public class GameStateManager : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class GameStateManager : MonoBehaviour
     [SerializeField, Header("ポーズUI")] private GameObject pauseUI;
     [SerializeField, Header("PlayerInputをアタッチ")] private PlayerInput playerInput;
     [SerializeField, Header("Inventoryをアタッチ")] private Inventory inventory;
+    [SerializeField, Header("最初に選択状態にするボタンをアタッチ")] private GameObject firstPickButton;
 
     //=== 変数宣言 ===
     private ReactiveProperty<bool> isInPause = new ReactiveProperty<bool>(false);   // ポーズ用フラグ
@@ -50,6 +52,7 @@ public class GameStateManager : MonoBehaviour
             {// ポーズ時の処理
                 Debug.Log("ポーズ状態：" + isInPause.Value);
                 pauseUI.SetActive(true);
+                EventSystem.current.SetSelectedGameObject(firstPickButton);
                 Time.timeScale = 0.0f;
             }
             else
