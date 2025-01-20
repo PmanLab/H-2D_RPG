@@ -1879,7 +1879,7 @@ MonoBehaviour:
   pauseUI: {fileID: 79364573}
   playerInput: {fileID: 1915051090}
   inventory: {fileID: 1915051093}
-  firstPickButton: {fileID: 184992407}
+  firstPickButton: {fileID: 333373211}
 --- !u!1 &624172540
 GameObject:
   m_ObjectHideFlags: 0
