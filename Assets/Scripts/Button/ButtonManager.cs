@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using UnityEditor;
-using System.Collections.Generic;
+using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
+using UnityEngine.UIElements;
 
 public class ButtonManager : MonoBehaviour
 {
@@ -10,7 +12,17 @@ public class ButtonManager : MonoBehaviour
     [SerializeField, Header("NPCInteract_InnKeeper(対応させるNPC)をアタッチ")] NPCInteract_InnKeeper npcInteract_InnKeeper;
     [SerializeField, Header("リスト選択番号を入力")] private int currentIndexNumber = 0;
 
+
     //=== メソッド ===
+    /// <summary>
+    /// ・指定したボタンを初期選択状態にする
+    /// </summary>
+    /// <param name="firstPickButton">初期選択状態にするボタンを割り当てる</param>
+    public void FirstPickButton(GameObject firstPickButton)
+    {
+        EventSystem.current.SetSelectedGameObject(firstPickButton);
+    }
+
     /// <summary>
     /// ・シーンを移動する処理
     /// </summary>
@@ -18,7 +30,7 @@ public class ButtonManager : MonoBehaviour
 
     public void LoadScene(string sceneName)
     {
-         LoadScene(sceneName);
+         SceneManager.LoadScene(sceneName);
     }
 
 
