@@ -12,10 +12,6 @@ using UnityEngine.EventSystems;
 public class NPCInteract_ItemShop : InteractBase
 {
     //=== シリアライズ ===
-    [SerializeField, Header("アイテム価格")] private int itemPrice;
-    [SerializeField, Header("アイテムの購入確認メッセージ")] private string purchaseMessage;
-
-
     [SerializeField, Header("購入可能アイテム")] private List<BaseItem> shopItems;
     [SerializeField, Header("購入可能なアイテムリストを表示するUI")] private GameObject ItemListUI;
     [SerializeField, Header("購入可能なアイテムリストを表示するText")] private Text ItemListText;
