@@ -79,10 +79,6 @@ public class NPCInteract_InnKeeper : InteractBase
 
     /// <summary>
     /// ・宿泊確認の選択肢処理
-    /// ・選択肢後、各パターン(Y：はい、N：いいえ)
-    /// └Y：所持金からお金を払い体力を全回復する
-    /// └N：何もしない
-    /// 
     /// </summary>
     private void DisplayInnConfirmation()
     {

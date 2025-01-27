@@ -2,16 +2,15 @@
 using UnityEditor;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
-using UnityEngine.UIElements;
 
 public class ButtonManager : MonoBehaviour
 {
     //=== シリアライズ ===
-    [SerializeField, Header("GameStateManagerをアタッチ")] private GameStateManager gameStateManager;
-    [SerializeField, Header("NPCInteract_ItemShop(対応させるNPC)をアタッチ")] NPCInteract_ItemShop npcInteract_ItemShop;
-    [SerializeField, Header("NPCInteract_InnKeeper(対応させるNPC)をアタッチ")] NPCInteract_InnKeeper npcInteract_InnKeeper;
-    [SerializeField, Header("リスト選択番号を入力")] private int currentIndexNumber = 0;
-
+    [SerializeField, Header("[必要な場合のみ設定]GameStateManagerをアタッチ")] private GameStateManager gameStateManager;
+    [SerializeField, Header("[必要な場合のみ設定]NPCInteract_ItemShop(対応させるNPC)をアタッチ")] NPCInteract_ItemShop npcInteract_ItemShop;
+    [SerializeField, Header("[必要な場合のみ設定]NPCInteract_InnKeeper(対応させるNPC)をアタッチ")] NPCInteract_InnKeeper npcInteract_InnKeeper;
+    [SerializeField, Header("[必要な場合のみ設定]NPCInteract_ChoiceEvent(対応させるNPC)をアタッチ")] NPCInteract_ChoiceEvent npcInteract_ChoiceEvent;
+    [SerializeField, Header("[必要な場合のみ設定]ショップアイテム購入リスト選択番号を入力")] private int currentIndexNumber = 0;
 
     //=== メソッド ===
     /// <summary>
@@ -72,6 +71,8 @@ public class ButtonManager : MonoBehaviour
         gameStateManager.IsInPause = false;
     }
 
+    //=== NPC(ショップ店員関連) ===
+
     /// <summary>
     /// ・指定したインデックスのアイテムを購入する
     /// </summary>
@@ -89,6 +90,8 @@ public class ButtonManager : MonoBehaviour
         npcInteract_ItemShop.ShopCloseButton();
     }
 
+    //=== NPC(宿屋関連) ===
+
     /// <summary>
     /// ・宿に泊まる事を承認し、宿泊の処理を行う
     /// </summary>
@@ -98,7 +101,6 @@ public class ButtonManager : MonoBehaviour
         npcInteract_InnKeeper.ApplyInn();
     }
 
-
     /// <summary>
     /// ・宿に泊まることを拒否し、承認ボタンを非表示にする
     /// </summary>
@@ -106,5 +108,25 @@ public class ButtonManager : MonoBehaviour
     {
         npcInteract_InnKeeper.ApplyCloseButton();
         npcInteract_InnKeeper.UnnApplyInn();
+    }
+
+    //=== NPC(選択肢関連) ===
+
+    /// <summary>
+    /// ・選択肢を承認した場合の処理(仮)
+    /// └ 今後[NPCInteract_ChoiceEvent]の処理を追加するので仮実装
+    /// </summary>
+    public void ChoiceApplyButton()
+    {
+        npcInteract_ChoiceEvent.ApplyChoice();
+    }
+
+    /// <summary>
+    /// ・選択肢を拒否した場合の処理(仮)
+    /// └ 今後[NPCInteract_ChoiceEvent]の処理を追加するので仮実装
+    /// </summary>
+    public void ChoiceUnApplyButton()
+    {
+        npcInteract_ChoiceEvent.UnApplyChoice();
     }
 }
