@@ -3140,16 +3140,21 @@ MonoBehaviour:
   conversationList: []
   dialogueText: {fileID: 1966791554}
   dialogueWindow: {fileID: 1625343584}
-  isLocked: 0
+  isLocked: 1
   openedMessage: "\u3092\u30B2\u30C3\u30C8\u3057\u305F"
   noContentsMessage: "\u4E2D\u8EAB\u306F\u7A7A\u3063\u307D\u3060\u30FB\u30FB\u30FB"
+  lockMessage: "\u9375\u304C\u304B\u304B\u3063\u3066\u958B\u304B\u306A\u3044\u30FB\u30FB\u30FB"
   getItemWindow: {fileID: 1124963705}
   itemIconImage: {fileID: 828739765}
   itemText: {fileID: 1960863931}
   playerInteract: {fileID: 1915051091}
   dataItem: {fileID: 11400000, guid: a7596f27fe2c689409ccef2d496e5837, type: 2}
   openChestSpriteRender: {fileID: 940823467}
-  chestSprite: {fileID: 21300000, guid: aec5a732457416c4a9b6f32ea807a330, type: 3}
+  ContentsChestSprite: {fileID: 21300000, guid: d34f3d7600a351049a23f8f5b61e7c0b,
+    type: 3}
+  noContentsChestSprite: {fileID: 21300000, guid: aec5a732457416c4a9b6f32ea807a330,
+    type: 3}
+  isOpen: 0
 --- !u!54 &940823465
 Rigidbody:
   m_ObjectHideFlags: 0
