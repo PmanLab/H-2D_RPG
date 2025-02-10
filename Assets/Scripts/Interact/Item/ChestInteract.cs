@@ -32,6 +32,28 @@ public class ChestInteract : InteractBase
     private IDisposable conversationSubscription;   // 購読を管理する変数
 
     //=== メソッド ===
+
+    /// <summary>
+    /// ・チェストの開閉状態によってSpriteを差し替える
+    /// </summary>
+    private void Start()
+    {
+            this.ObserveEveryValueChanged(_ => isOpen)
+        .Subscribe(_ =>
+        {
+            if (_)
+            {// 宝箱が開いていた場合
+                ChangeChestSprite(noContentsChestSprite);   // 宝箱 画像を差し替え(開)
+            }
+            else
+            {// 宝箱が開いていない場合
+                ChangeChestSprite(ContentsChestSprite);     // 宝箱 画像を差し替え(閉)
+            }
+
+        })
+        .AddTo(this);
+    }
+
     /// <summary>
     ///・ 継承したインタラクト処理内で
     /// 　このNPCが会話した時のメソッドを呼び出す
@@ -89,20 +111,7 @@ public class ChestInteract : InteractBase
                 })
                 .AddTo(this);
 
-            this.ObserveEveryValueChanged(_ => isOpen)
-                .Subscribe(_ =>
-                {
-                    if(_)
-                    {// 宝箱が開いていた場合
-                        ChangeChestSprite(noContentsChestSprite);   // 宝箱 画像を差し替え(開)
-                    }
-                    else
-                    {// 宝箱が開いていない場合
-                        ChangeChestSprite(ContentsChestSprite);     // 宝箱 画像を差し替え(閉)
-                    }
 
-                })
-                .AddTo(this);
         }
     }
 
