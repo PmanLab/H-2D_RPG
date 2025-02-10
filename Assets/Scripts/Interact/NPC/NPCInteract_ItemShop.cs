@@ -219,7 +219,6 @@ public class NPCInteract_ItemShop : InteractBase
         PlayerStateManager.instance.IsChoice = false;
         ShowDialogueWindow(false);              // 会話ウィンドウを非表示
         ShowItemListDialogueWindow(false);      // アイテムリストウィンドウを非表示
-        ShowInteractUI(true);                   // インタラクトUIを再表示
         PlayerController.ResumeMovement();      // プレイヤーの移動を再開
 
         conversationSubscription?.Dispose();    // 購読を解除

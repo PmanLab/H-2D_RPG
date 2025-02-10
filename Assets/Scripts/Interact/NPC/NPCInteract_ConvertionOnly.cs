@@ -85,7 +85,6 @@ public class NPCInteract_ConvertionOnly : InteractBase
         Debug.Log("会話を終了しました・.");
         PlayerStateManager.instance.IsInConversation = false;
         ShowDialogueWindow(false);              // 会話ウィンドウを非表示
-        ShowInteractUI(true);    // インタラクトUIを再表示
         PlayerController.ResumeMovement();      // プレイヤーの移動を再開
 
         conversationSubscription?.Dispose();    // 購読を解除
