@@ -12,7 +12,7 @@ using UnityEngine.EventSystems;
 public class NPCInteract_ItemShop : InteractBase
 {
     //=== シリアライズ ===
-    [SerializeField, Header("購入可能アイテム")] private List<BaseItem> shopItems;
+    [SerializeField, Header("購入可能アイテム")] private List<DataItem> shopItems;
     [SerializeField, Header("購入可能なアイテムリストを表示するUI")] private GameObject ItemListUI;
     [SerializeField, Header("購入可能なアイテムリストを表示するText")] private Text ItemListText;
     [SerializeField, Header("購入選択ボタンUI")] private GameObject indexButtonUI;

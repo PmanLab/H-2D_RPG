@@ -5,7 +5,7 @@
 /// アイテムの要素をまとめてある
 /// </summary>
 [CreateAssetMenu(fileName = "NewGameData", menuName = "DataItem/Item")]
-public class BaseItem : ScriptableObject
+public class DataItem : ScriptableObject
 {
     public string itemName;          // アイテム名
     public string description;       // アイテム説明
