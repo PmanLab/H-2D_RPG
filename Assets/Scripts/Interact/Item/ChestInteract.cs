@@ -2,9 +2,6 @@
 using UnityEngine.UI;
 using UnityEngine;
 using UniRx;
-using Unity.VisualScripting;
-using System.Security.Cryptography.X509Certificates;
-using Unity.Mathematics;
 
 /// <summary>
 /// チェイスインタラクト(InteractBase継承)
@@ -16,6 +13,8 @@ public class ChestInteract : InteractBase
     [SerializeField, Header("宝箱の鍵状況(ロック)")] private bool isLocked = false;
     [SerializeField, Header("開いた後のメッセージ入力")] private string openedMessage;
     [SerializeField, Header("中身がなかった時のメッセージを入力")] private string noContentsMessage;
+    [SerializeField, Header("鍵がかかっていた時のメッセージを入力")] private string lockMessage;
+    
     [SerializeField, Header("入手アイテムを表示するウィンドウをアタッチ")] private GameObject getItemWindow;
     [SerializeField, Header("入手アイテムを表示するImageをアタッチ")] private Image itemIconImage;
     [SerializeField, Header("入手アイテム名を表示するテキストをアタッチ")] private Text itemText;
@@ -24,10 +23,11 @@ public class ChestInteract : InteractBase
     [SerializeField, Header("宝箱入手アイテムデータをアタッチ")] DataItem dataItem;
 
     [SerializeField, Header("宝箱開封後のSpriteRendererをアタッチ")] SpriteRenderer openChestSpriteRender;
-    [SerializeField, Header("宝箱開封後のSpriteをアタッチ")] Sprite chestSprite;
+    [SerializeField, Header("宝箱開封前のSpriteをアタッチ")] Sprite ContentsChestSprite;
+    [SerializeField, Header("宝箱開封後のSpriteをアタッチ")] Sprite noContentsChestSprite;
+    [SerializeField, Header("宝箱 開封フラグ(デバッグ)")] private bool isOpen = false;                     // 宝箱の状況を確認するフラグ(中身あり || 空)
 
     //=== 変数宣言 ===
-    private bool isOpen = false;                     // 宝箱の状況を確認するフラグ(中身あり || 空)
     //private int currentDialougueIndex = 0;          // 現在の会話インデックス
     private IDisposable conversationSubscription;   // 購読を管理する変数
 
@@ -90,10 +90,17 @@ public class ChestInteract : InteractBase
                 .AddTo(this);
 
             this.ObserveEveryValueChanged(_ => isOpen)
-                .Where(open => open)
                 .Subscribe(_ =>
                 {
-                    ChangeChestSprite();
+                    if(_)
+                    {// 宝箱が開いていた場合
+                        ChangeChestSprite(noContentsChestSprite);   // 宝箱 画像を差し替え(開)
+                    }
+                    else
+                    {// 宝箱が開いていない場合
+                        ChangeChestSprite(ContentsChestSprite);     // 宝箱 画像を差し替え(閉)
+                    }
+
                 })
                 .AddTo(this);
         }
@@ -102,7 +109,7 @@ public class ChestInteract : InteractBase
     /// <summary>
     /// ・宝箱のSpriteを変更する
     /// </summary>
-    private void ChangeChestSprite()
+    private void ChangeChestSprite(Sprite chestSprite)
     {
         openChestSpriteRender.sprite = chestSprite;
     }
@@ -117,7 +124,13 @@ public class ChestInteract : InteractBase
         if (isLocked)
         {// ロックがかかっていた場合
             Debug.Log("ロックされています");
-            // 鍵が必要な場合の処理や開いた時の処理を書く↓
+
+            DialogueText.text = lockMessage;    // ウィンドウテキストを書き換え
+
+            // 2秒後にアイテム入手ウィンドウを閉じて会話終了
+            Observable.Timer(TimeSpan.FromSeconds(2))
+                .Subscribe(_ => EndCinversation())
+                .AddTo(this);
 
         }
         else
