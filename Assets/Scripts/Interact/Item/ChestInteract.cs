@@ -26,7 +26,7 @@ public class ChestInteract : InteractBase
     [SerializeField, Header("宝箱開封前のSpriteをアタッチ")] Sprite ContentsChestSprite;
     [SerializeField, Header("宝箱開封後のSpriteをアタッチ")] Sprite noContentsChestSprite;
     [SerializeField, Header("宝箱 開封フラグ(デバッグ)")] private bool isOpen = false;                     // 宝箱の状況を確認するフラグ(中身あり || 空)
-
+    
     //=== 変数宣言 ===
     //private int currentDialougueIndex = 0;          // 現在の会話インデックス
     private IDisposable conversationSubscription;   // 購読を管理する変数
@@ -104,6 +104,7 @@ public class ChestInteract : InteractBase
                 !PlayerStateManager.instance.IsChoice &&
                 !PlayerController.IsMoving &&
                 playerInteract.interactAction.triggered)
+                .First()            // 一度のみ実行
                 .Subscribe(_ =>
                 {
                     TryOpen();  // 宝箱を開ける処理
@@ -149,6 +150,8 @@ public class ChestInteract : InteractBase
             ShowInteractUI(false);  // UIを非表示にする
             DisplayItemWindow(true);
             isOpen = true;
+
+            inventory.AddItem(dataItem);            // アイテムをインベントリに追加(スタック)する
             itemIconImage.sprite = dataItem.icon;   // 入手アイテムのアイコンを表示 Imageにセット
             itemText.text = dataItem.itemName + openedMessage;      // 入手アイテムのアイコンを表示 Textにセット
 
