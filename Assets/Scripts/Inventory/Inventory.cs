@@ -19,7 +19,7 @@ public class Inventory : MonoBehaviour
     public bool isShowInventoryUI { get; set; } = false;
 
     /// <summary>
-    /// インベントリにアイテムを追加する
+    /// ・インベントリにアイテムを追加する
     /// </summary>
     public bool AddItem(DataItem item)
     {
@@ -73,7 +73,7 @@ public class Inventory : MonoBehaviour
     }
 
     /// <summary>
-    /// 指定したアイテムをインベントリから削除する
+    /// ・指定したアイテムをインベントリから削除する
     /// </summary>
     public void RemoveItem(DataItem item)
     {
@@ -85,7 +85,7 @@ public class Inventory : MonoBehaviour
     }
 
     /// <summary>
-    /// インベントリ内のアイテムを全て表示
+    /// ・インベントリ内のアイテムを全て表示
     /// </summary>
     public void DisplayInventory()
     {
@@ -98,7 +98,7 @@ public class Inventory : MonoBehaviour
 
 
     /// <summary>
-    /// UIテキストにインベントリ内容を表示
+    /// ・UIテキストにインベントリ内容を表示
     /// </summary>
     public void UpdateInventoryUI()
     {

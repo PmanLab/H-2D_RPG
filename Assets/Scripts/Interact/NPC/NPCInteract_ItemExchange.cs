@@ -78,7 +78,8 @@ public class NPCInteract_ItemExchange : InteractBase
     }
 
     /// <summary>
-    /// ・会話が終了した際にUIを非表示にする
+    /// ・会話が終了した際にUIを非表示にし、
+    /// 　各フラグをオフにする会話終了メソッド
     /// </summary>
     private void EndConversation()
     {

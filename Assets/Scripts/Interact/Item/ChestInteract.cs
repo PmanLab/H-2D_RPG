@@ -4,8 +4,8 @@ using UnityEngine;
 using UniRx;
 
 /// <summary>
-/// チェイスインタラクト(InteractBase継承)
-/// 主にチェストに関するインタラクト処理をまとめてある
+/// ・チェイスインタラクト(InteractBase継承)
+/// └主にチェストに関するインタラクト処理をまとめてある
 /// </summary>
 public class ChestInteract : InteractBase
 {
@@ -28,7 +28,6 @@ public class ChestInteract : InteractBase
     [SerializeField, Header("宝箱 開封フラグ(デバッグ)")] private bool isOpen = false;                     // 宝箱の状況を確認するフラグ(中身あり || 空)
     
     //=== 変数宣言 ===
-    //private int currentDialougueIndex = 0;          // 現在の会話インデックス
     private IDisposable conversationSubscription;   // 購読を管理する変数
 
     //=== メソッド ===
@@ -55,8 +54,8 @@ public class ChestInteract : InteractBase
     }
 
     /// <summary>
-    ///・ 継承したインタラクト処理内で
-    /// 　このNPCが会話した時のメソッドを呼び出す
+    /// ・継承したインタラクト処理内で
+    ///  このNPCが会話した時のメソッドを呼び出す
     /// </summary>
     public override void InteractProcess()
     {
@@ -64,12 +63,11 @@ public class ChestInteract : InteractBase
     }
 
     /// <summary>
-    /// ・宝箱イベント
+    /// ・宝箱を開く処理の監視イベント
     /// </summary>
     private void StartEvent()
     {
         SetNpcName();   // ウィンドウテキストの名前をセット
-        //currentDialougueIndex = 0;  // セリフのインデックスをリセット
         PlayerStateManager.instance.IsInConversation = true;
         inventory.ShowInventoryUI();
 
@@ -181,7 +179,10 @@ public class ChestInteract : InteractBase
         getItemWindow.SetActive(display);          
     }
 
-    
+    /// <summary>
+    /// ・会話が終了した際にUIを非表示にし、
+    /// 　各フラグをオフにする会話終了メソッド
+    /// </summary>
     private void EndCinversation()
     {
         Debug.Log("会話を終了しました・・・");

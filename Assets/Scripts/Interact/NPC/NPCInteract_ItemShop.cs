@@ -208,9 +208,9 @@ public class NPCInteract_ItemShop : InteractBase
             .AddTo(this);
         indexButtonUI.gameObject.SetActive(false);             // インデックスボタンを非表示に設定
     }
-
     /// <summary>
-    /// ・会話が終了した際にUIを非表示にする
+    /// ・会話が終了した際にUIを非表示にし、
+    /// 　各フラグをオフにする会話終了メソッド
     /// </summary>
     private void EndConversation()
     {
