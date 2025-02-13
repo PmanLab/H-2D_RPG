@@ -2,8 +2,8 @@
 using UnityEngine.UI;
 
 /// <summary>
-/// アイテムインタラクト(InteractBase継承)
-/// 主にアイテムに関するインタラクト処理をまとめてある
+/// ・アイテムインタラクト(InteractBase継承)
+/// └主にアイテムに関するインタラクト処理をまとめてある
 /// </summary>
 public class ItemInteract : InteractBase
 {

@@ -165,7 +165,8 @@ public class NPCInteract_InnKeeper : InteractBase
     }
 
     /// <summary>
-    /// ・会話が終了した際にUIを非表示にする
+    /// ・会話が終了した際にUIを非表示にし、
+    /// 　各フラグをオフにする会話終了メソッド
     /// </summary>
     private void EndConversation()
     {
@@ -174,7 +175,6 @@ public class NPCInteract_InnKeeper : InteractBase
         PlayerStateManager.instance.IsChoice = false;
         ShowDialogueWindow(false);                  // 会話ウィンドウを非表示
         ShowButton(false);                          // 宿泊承認確認ボタンを非表示
-        ShowInteractUI(true);                       // インタラクトUIを再表示
         PlayerController.ResumeMovement();          // プレイヤーの移動を再開
 
         conversationSubscription?.Dispose();        // 購読を解除
