@@ -23,7 +23,9 @@ public class GameStateManager : MonoBehaviour
         get => isInPause.Value;
         set => isInPause.Value = value;
     }
-
+	
+	Debug.Log("");
+	
     //=== メソッド ===
     /// <summary>
     /// ・ESCキー押下自のポーズフラグ監視処理
