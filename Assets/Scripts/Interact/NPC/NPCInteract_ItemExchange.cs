@@ -78,14 +78,14 @@ public class NPCInteract_ItemExchange : InteractBase
     }
 
     /// <summary>
-    /// ・会話が終了した際にUIを非表示にする
+    /// ・会話が終了した際にUIを非表示にし、
+    /// 　各フラグをオフにする会話終了メソッド
     /// </summary>
     private void EndConversation()
     {
         Debug.Log("会話を終了しました・.");
         PlayerStateManager.instance.IsInConversation = false;
         ShowDialogueWindow(false);              // 会話ウィンドウを非表示
-        ShowInteractUI(true);    // インタラクトUIを再表示
         PlayerController.ResumeMovement();      // プレイヤーの移動を再開
 
         conversationSubscription?.Dispose();    // 購読を解除

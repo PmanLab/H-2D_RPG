@@ -12,6 +12,14 @@ public class CameraMove : MonoBehaviour
     private Vector3ReactiveProperty cameraTargetPosition = new Vector3ReactiveProperty(); // カメラの目標位置
 
     /// <summary>
+    /// ・カメラ座標を正しい位置(Player + OffSet)に初期化する
+    /// </summary>
+    private void Awake()
+    {
+        cameraTargetPosition.Value = playerTransform.position + offset;
+    }
+
+    /// <summary>
     /// ・カメラの追従処理を設定
     /// ・プレイヤーの位置をリアクティブに監視し、カメラをスムーズに追従する
     /// </summary>
@@ -22,6 +30,9 @@ public class CameraMove : MonoBehaviour
             Debug.LogError("Player Transform が未設定です");
             return;
         }
+
+        //
+
 
         // プレイヤーの位置を監視してカメラの目標位置を更新
         Observable.EveryUpdate()

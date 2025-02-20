@@ -42,7 +42,7 @@ public abstract class InteractBase : MonoBehaviour
 
     //=== メソッド ===
     /// <summary>
-    /// ・オブジェクトを無効・有効にする処理
+    /// ・インタラクトUIを表示・非表示にする処理
     /// </summary>
     /// <param name="isVisible">UIの有効・無効</param>
     public virtual void ShowInteractUI(bool isVisible) => interactUI.SetActive(isVisible);

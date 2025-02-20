@@ -12,11 +12,7 @@ using UnityEngine.EventSystems;
 public class NPCInteract_ItemShop : InteractBase
 {
     //=== シリアライズ ===
-    [SerializeField, Header("アイテム価格")] private int itemPrice;
-    [SerializeField, Header("アイテムの購入確認メッセージ")] private string purchaseMessage;
-
-
-    [SerializeField, Header("購入可能アイテム")] private List<BaseItem> shopItems;
+    [SerializeField, Header("購入可能アイテム")] private List<DataItem> shopItems;
     [SerializeField, Header("購入可能なアイテムリストを表示するUI")] private GameObject ItemListUI;
     [SerializeField, Header("購入可能なアイテムリストを表示するText")] private Text ItemListText;
     [SerializeField, Header("購入選択ボタンUI")] private GameObject indexButtonUI;
@@ -212,9 +208,9 @@ public class NPCInteract_ItemShop : InteractBase
             .AddTo(this);
         indexButtonUI.gameObject.SetActive(false);             // インデックスボタンを非表示に設定
     }
-
     /// <summary>
-    /// ・会話が終了した際にUIを非表示にする
+    /// ・会話が終了した際にUIを非表示にし、
+    /// 　各フラグをオフにする会話終了メソッド
     /// </summary>
     private void EndConversation()
     {
@@ -223,7 +219,6 @@ public class NPCInteract_ItemShop : InteractBase
         PlayerStateManager.instance.IsChoice = false;
         ShowDialogueWindow(false);              // 会話ウィンドウを非表示
         ShowItemListDialogueWindow(false);      // アイテムリストウィンドウを非表示
-        ShowInteractUI(true);                   // インタラクトUIを再表示
         PlayerController.ResumeMovement();      // プレイヤーの移動を再開
 
         conversationSubscription?.Dispose();    // 購読を解除
